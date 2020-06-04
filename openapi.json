@@ -1,0 +1,3124 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "A guide to XPO's REST APIs",
+    "description": "\n# Introduction \nWelcome to XPO API Explorer, here user can discover, learn & Interact with our APIs.\n\nOur APIs are built on modern REST principles.These APIs enables our partner to drive success using XPO's Logistics, Tranportation and Supply Chain experties services. \n- **Some key features are:** \n * User can get real time quotes. \n * User can convert real time quotes into orders. \n * User can create, update and delete orders. \n * User can get real time shipment tracking event details.\n * User can get invoice details along with invoice document.\n\nAll APIs operations are listed below with complete details of parameters,request and responses."
+  },
+  "servers": [
+    {
+      "url": "https://api-np-connect.xpo.com",
+      "description": "Test environment."
+    },
+    {
+      "url": " https://api-connect.xpo.com",
+      "description": "Production environment."
+    }
+  ],
+  "security": [
+    {
+      "OAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Token API",
+      "description": "XPO Logistics uses OAuth 2.0 token mechanism to securely access API endpoints using client credentials grant type. \n\nUser must get Client Id, Client Secret, Scope and API Key prior to generate bearer token either by requesting to sales@xpo.com or submitting a support query <a href=\"../apimanagement/support\">Here</a>.\n\nBellow diagram shows the authorization flow at XPO.\n\n<img src=\"../content/images/auth_token_flow.png\" alt=\"Authorization Flow Diagram\">"
+    },
+    {
+      "name": "Quote API",
+      "description": "XPO enables partner to use Quote API to get Pricing Rate details for submitted shipment information.\n\n Partner can convert generated real time Quote into Order. "
+    },
+    {
+      "name": "Order API",
+      "description": "Order API allows partners to perform all order related operations e.g. Create Order, Update Order, Delete Order and Get Order Details.\n\nAll Order APIs operations are listed below with complete details of parameters,request and responses."
+    }
+
+  ],
+  "paths": {
+    "/OAuthService/rest/v1/token/": {
+      "post": {
+        "description": "Generate Token API allows user to generate bearer token.\n\n User needs to provide Client Id, Client Secret, Scope and API Key as request header parameter to generate the token.\n\n Once token is generated user can use that token to access respective applicable socpe api endpoint.\n\n Generated token expires in 2 hours. Once token is expired , user has to regenerate fresh token to access API.",
+        "operationId": "Generate Token",
+        "security": [],
+        "tags": [
+          "Token API"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "header",
+            "description": "Api Key as provided by XPO.",
+            "name": "x-api-key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "in": "header",
+            "description": "Grant Type, typical value is client_credentials",
+            "name": "grant_type",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "in": "header",
+            "description": "Scope as provided by XPO to access requested API.",
+            "name": "scope",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "in": "header",
+            "description": "Client Id as provided by XPO.",
+            "name": "client_id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "in": "header",
+            "description": "Client Secret as provided by XPO.",
+            "name": "client_secret",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-code-samples": [
+          {
+            "lang": "Curl",
+            "source": "curl -X POST \\ \n\n  https://api-np-connect.xpo.com/OAuthService/rest/v1/token/ \\  \n\n -H 'cache-control: no-cache' \\  \n\n  -H 'client_id: xpo-api-integration' \\ \n\n   -H 'client_secret: DwqLUBgrJLCnMePW2gcWMkPAR5vaJ3pSreZZBAMzLvtjcAhv9kWYYTQjh97wyGtw' \\  \n\n -H 'grant_type: client_credentials' \\ \n\n  -H 'scope: xpo-rates-api' \\ \n\n  -H 'x-api-key: 40ec79b5-c174-4d5b-9a62-ccce41563ed5' "
+          },
+          {
+            "lang": "Java",
+            "source": "OkHttpClient client = new OkHttpClient();\n\nRequest request = new Request.Builder()\n  .url(\"https://api-np-connect.xpo.com/OAuthService/rest/v1/token/\")\n  .post(null)\n  .addHeader(\"grant_type\", \"client_credentials\")\n  .addHeader(\"scope\", \"xpo-rates-api\")\n  .addHeader(\"x-api-key\", \"40ec79b5-c174-4d5b-9a62-ccce41563ed5\")\n  .addHeader(\"client_id\", \"xpo-api-integration\")\n  .addHeader(\"client_secret\", \"DwqLUBgrJLCnMePW2gcWMkPAR5vaJ3pSreZZBAMzLvtjcAhv9kWYYTQjh97wyGtw\")\n  .addHeader(\"cache-control\", \"no-cache\")\n   .build();\n\nResponse response = client.newCall(request).execute();"
+          },
+          {
+            "lang": "NodeJS",
+            "source": "var http = require(\"https\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"api-np-connect.xpo.com\",\n  \"port\": null,\n  \"path\": \"/OAuthService/rest/v1/token/\",\n  \"headers\": {\n    \"grant_type\": \"client_credentials\",\n    \"scope\": \"xpo-rates-api\",\n    \"x-api-key\": \"40ec79b5-c174-4d5b-9a62-ccce41563ed5\",\n    \"client_id\": \"xpo-api-integration\",\n    \"client_secret\": \"DwqLUBgrJLCnMePW2gcWMkPAR5vaJ3pSreZZBAMzLvtjcAhv9kWYYTQjh97wyGtw\",\n    \"cache-control\": \"no-cache\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
+          },
+          {
+            "lang": "C#(RestSharp)",
+            "source": "var client = new RestClient(\"https://api-np-connect.xpo.com/OAuthService/rest/v1/token/\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"cache-control\", \"no-cache\");\nrequest.AddHeader(\"client_secret\", \"DwqLUBgrJLCnMePW2gcWMkPAR5vaJ3pSreZZBAMzLvtjcAhv9kWYYTQjh97wyGtw\");\nrequest.AddHeader(\"client_id\", \"xpo-api-integration\");\nrequest.AddHeader(\"x-api-key\", \"40ec79b5-c174-4d5b-9a62-ccce41563ed5\");\nrequest.AddHeader(\"scope\", \"xpo-rates-api\");\nrequest.AddHeader(\"grant_type\", \"client_credentials\");\nIRestResponse response = client.Execute(request);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/successtoken"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Please contact your XPO representive."
+          }
+        }
+      }
+    },
+    "/QuoteService/rest/v1/Quote": {
+      "post": {
+        "description": "Allows partner to generate quote by providing shipment details.\n\n User must provide valid API Key and token as header parameter and shipment details as request payload to generate Quote.",
+        "operationId": "Create Quote",
+        "tags": [
+          "Quote API"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "header",
+            "description": "Api Key as provided by XPO.",
+            "name": "x-api-key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "in": "header",
+            "description": "Valid bearer token generated using Token API.",
+            "name": "xpoauthorization",
+            "schema": {
+              "type": "JWT token"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "[JSON]Quote Request.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteRequest"
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Curl",
+            "source": "curl -X POST \\ \n https://sandbox-api.navisphere.com/v1/orders \\ \n -H 'Authorization: Bearer YOUR TOKEN' \\ \n -H 'Content-Type: application/json' \\ \n -d '{ \n \t\"customers\": [{ \n \t\t\"customerCode\": \"C8283603\",\n \t\t\"contacts\": [{\n \t\t\t\"name\": \"Contact One\",\n \t\t\t\"type\": \"Contact\",\n \t\t\t\"companyName\": \"Customer One\",\n \t\t\t\"contactMethods\": [{ \n \t\t\t\t\"method\": \"Phone\",\n \t\t\t\t\"value\": \"5554678415\"\n \t\t\t}]\n \t\t}],\n\n \t\t\"referenceNumbers\": [{\n \t\t\t\"type\": \"MBOL\",\n \t\t\t\"value\": \"SIMPMBOL67890\"\n \t\t}]\n \t}],\n \t\"billTos\": [{\n \t\t\"customerCode\": \"C8283603\",\n \t\t\"charges\": [{\n \t\t\t\"rate\": 132.45,\n \t\t\t\"rateCode\": \"405\",\n \t\t\t\"alternateDescription\": \"Fuel Surcharge\"\n \t\t}],\n \t\t\"currencyCode\": \"USD\",\n \t\t\"contacts\": [{\n \t\t\t\"name\": \"Contact One\",\n \t\t\t\"type\": \"Contact\",\n \t\t\t\"companyName\": \"Customer One\",\n \t\t\t\"contactMethods\": [{ \t\t\t\t\"method\": \"Phone\",\n \t\t\t\t\"value\": \"5554678415\"\n \t\t\t}]\n \t\t}],\n \t\t\"referenceNumbers\": [{ \t\t\t\"type\": \"SHID\",\n \t\t\t\"value\": \"SIMPSHID67890\"\n \t\t}]\n \t}],\n \t\"services\": [{\n \t\t\"serviceLevel\": \"Standard\",\n \t\t\"sellMode\": \"TL\",\n \t\t\"locations\": [{\n \t\t\t\"customerLocationId\": \"W541849\",\n \t\t\t\"type\": \"origin\",\n \t\t\t\"sequenceNumber\": 1,\n \t\t\t\"name\": \"Origin Location\",\n \t\t\t\"address\": {\n \t\t\t\t\"address1\": \"14800 Charlson Rd\",\n \t\t\t\t\"address2\": \"Building 1\",\n \t\t\t\t\"address3\": \"Floor 2\",\n \t\t\t\t\"address4\": \"Room 212\",\n \t\t\t\t\"city\": \"Eden Prairie\",\n \t\t\t\t\"county\": \"Hennepin\",\n \t\t\t\t\"lat\": 31.717096,\n \t\t\t\t\"long\": -99.132553,\n \t\t\t\t\"stateProvinceCode\": \"MN\",\n \t\t\t\t\"postalCode\": \"55347\",\n \t\t\t\t\"country\": \"US\" \t\t\t},\n \t\t\t\"openDateTime\": \"2019-03-18T17:23:48.983Z\",\n \t\t\t\"closeDateTime\": \"2019-03-19T17:23:48.984Z\",\n \t\t\t\"scheduledOpenDateTime\": \"2019-03-18T17:23:48.983Z\",\n \t\t\t\"scheduledCloseDateTime\": \"2019-03-19T17:23:48.984Z\",\n \t\t\t\"scalesRequired\": false,\n \t\t\t\"hasDropTrailer\": false,\n \t\t\t\"specialInstructions\": \"Stay hungry. Stay foolish. -Steve Jobs\",\n \t\t\t\"contacts\": [{\n \t\t\t\t\"name\": \"Warehouse Contact\",\n \t\t\t\t\"type\": \"Contact\",\n \t\t\t\t\"companyName\": \"Warehouse One\",\n \t\t\t\t\"contactMethods\": [{\n \t\t\t\t\t\"method\": \"Phone\",\n \t\t\t\t\t\"value\": \"5554678415\" \t\t\t\t}]\n \t\t\t}],\n \t\t\t\"referenceNumber\": [{ \n \t\t\t\t\"type\": \"PU\",\n \t\t\t\t\"value\": \"SIMPPU67890\"\n \t\t\t}]\n \t\t},{ \n \t\t\t\"customerLocationId\": \"W541849\",\n \t\t\t\"type\": \"destination\",\n \t\t\t\"sequenceNumber\": 2,\n \t\t\t\"name\": \"Destination Location\",\n \t\t\t\"address\": { \t\t\t\t\"address1\": \"800 Washington Avenue North\",\n \t\t\t\t\"address2\": \"Building 1\",\n \t\t\t\t\"address3\": \"Floor 5\",\n \t\t\t\t\"address4\": \"Suite 550\",\n \t\t\t\t\"city\": \"Minneapolis\",\n \t\t\t\t\"county\": \"Hennepin\",\n \t\t\t\t\"lat\": 44.989386,\n \t\t\t\t\"long\": -93.278626,\n \t\t\t\t\"stateProvinceCode\": \"MN\",\n \t\t\t\t\"postalCode\": \"55401\",\n \t\t\t\t\"country\": \"US\"\n \t\t\t},\n \t\t\t\"openDateTime\": \"2019-03-25T17:23:48.984Z\",\n \t\t\t\"closeDateTime\": \"2019-03-26T17:23:48.984Z\",\n \t\t\t\"scheduledOpenDateTime\": \"2019-03-25T17:23:48.984Z\",\n \t\t\t\"scheduledCloseDateTime\": \"2019-03-26T17:23:48.984Z\",\n \t\t\t\"scalesRequired\": false,\n \t\t\t\"hasDropTrailer\": false,\n \t\t\t\"specialInstructions\": \"Whatever you are, be a good one. -Abraham Lincoln\",\n \t\t\t\"contacts\": [{\n \t\t\t\t\"name\": \"Contact two\",\n \t\t\t\t\"type\": \"Contact\",\n \t\t\t\t\"companyName\": \"Warehouse Two\",\n \t\t\t\t\"contactMethods\": [{ \n \t\t\t\t\t\"method\": \"Phone\",\n \t\t\t\t\t\"value\": \"5554678415\"\n \t\t\t\t}]\n \t\t\t}],\n \t\t\t\"referenceNumbers\": [{\n \t\t\t\t\"type\": \"DEL\",\n \t\t\t\t\"value\": \"SIMPDEL67890\"\n \t\t\t}]\n \t\t\t}],\n \t\t\t\"items\": [{\n \t\t\t\t\"packagingType\": \"Case\",\n \t\t\t\t\"quantity\": 50,\n \t\t\t\t\"description\": \"Widgets\",\n \t\t\t\t\"productCode\": \"123-45\",\n \t\t\t\t\"freightClass\": \"70\",\n \t\t\t\t\"weight\": 45000,\n \t\t\t\t\"weightUnitOfMeasure\": \"Pounds\",\n \t\t\t\t\"packagingLength\": 2,\n \t\t\t\t\"packagingWidth\": 2,\n \t\t\t\t\"packagingHeight\": 2,\n \t\t\t\t\"packagingUnitOfMeasure\": \"Inches\",\n \t\t\t\t\"equipmentLength\": 48,\n \t\t\t\t\"equipmentHeight\": 9,\n \t\t\t\t\"equipmentWidth\": 8,\n \t\t\t\t\"equipmentUnitOfMeasure\": \"Feet\",\n \t\t\t\t\"packagingVolume\": 7680,\n \t\t\t\t\"packagingVolumeUnitOfMeasure\": \"CubicFeet\",\n \t\t\t\t\"insuranceValue\": 1000,\n \t\t\t\t\"pallets\": 1,\n \t\t\t\t\"palletSpaces\": 1,\n \t\t\t\t\"nationalMotorFreightClass\": \"50\",\n \t\t\t\t\"hazardousProperties\": {\n \t\t\t\t\t\"description\": \"Hazardous Material\",\n \t\t\t\t\t\"technicalName\": \"Technically Hazardous\",\n \t\t\t\t\t\"unNumber\": \"2796\",\n \t\t\t\t\t\"classCode\": \"8\",\n \t\t\t\t\t\"packagingGroup\": \"Group I\",\n \t\t\t\t\t\"emergencyPhone\": \"911\",\n \t\t\t\t\t\"authCode\": \"D\",\n \t\t\t\t\t\"isPlacarded\": false,\n \t\t\t\t\t\"isReportableQuantity\": false,\n \t\t\t\t\t\"isPrimaryCommodity\": false,\n \t\t\t\t\t\"isNOSCommodity\": false \t\t\t\t},\n \t\t\t\t\"upcNumber\": \"1234567890\",\n \t\t\t\t\"skuNumber\": \"01234-001-F10-6\",\n \t\t\t\t\"isStackable\": false,\n \t\t\t\t\"isTemperatureSensitive\": true,\n \t\t\t\t\"temperatureType\": \"Dry\",\n \t\t\t\t\"temperatureUnit\": \"Celsius\",\n \t\t\t\t\"requiredTemperatureHigh\": 32,\n \t\t\t\t\"requiredTemperatureLow\": 0,\n \t\t\t\t\"referenceNumbers\": [{\n \t\t\t\t\t\"type\": \"PO\",\n \t\t\t\t\t\"value\": \"SIMPPO67890\"\n \t\t\t\t}]\n \t\t\t}],\n \t\t\t\"collectOnDelivered\": [{\n \t\t\t\t\"amount\": 153.24,\n \t\t\t\t\"paymentType\": \"CC\",\n \t\t\t\t\"payableTo\": \"John Doe\",\n \t\t\t\t\"mailTo\": \"Jane Doe\",\n \t\t\t\t\"address\": {\n \t\t\t\t\t\"address1\": \"14800 Charlson Rd\",\n \t\t\t\t\t\"address2\": \"Building 1\",\n \t\t\t\t\t\"address3\": \"Floor 5\",\n \t\t\t\t\t\"address4\": \"Room 212\",\n \t\t\t\t\t\"city\": \"Eden Prairie\",\n \t\t\t\t\t\"county\": \"Hennepin\",\n \t\t\t\t\t\"lat\": 34.1548,\n \t\t\t\t\t\"long\": -84.46578,\n \t\t\t\t\t\"stateProvinceCode\": \"MN\",\n \t\t\t\t\t\"postalCode\": \"55347\",\n \t\t\t\t\t\"country\": \"US\"\n \t\t\t\t},\n \t\t\t\t\"referenceNumbers\": [{\n \t\t\t\t\t\"type\": \"MBOL\",\n \t\t\t\t\t\"value\": \"12345687\"\n \t\t\t\t}]\n \t\t\t}],\n \t\t\t\"referenceNumbers\": [{\n \t\t\t\t\"type\": \"PRO\",\n \t\t\t\t\"value\": \"SIMPPRO67890\"\n \t\t\t}]\n \t\t}],\n \t\t\"measurementSystem\": \"Standard\",\n \t\t\"referenceNumbers\": [{\n \t\t\t\"type\": \"CON\",\n \t\t\t\"value\": \"CON12321NOC\"\n \t\t},{\n \t\t\t\"type\": \"JNO\",\n \t\t\t\"value\": \"NOT A REAL ORDER!!!!!!!!!!\"\n \t\t}],\n \t\t\"notes\": \"Created through Schema Test\"\n }'"
+          },
+          {
+            "lang": "Java",
+            "source": "HttpResponse<String> response = Unirest.post(\"https://sandbox-api.navisphere.com/v1/orders\")\n .header(\"Content-Type\", \"application/json\")\n .header(\"Authorization\", \"Bearer YOU TOKEN\")\n .body(\"{\n  \"customers\": [\n    {\n      \"customerCode\": \"C8283603\",\n      \"contacts\": [\n        {\n          \"name\": \"Contact One\",\n          \"type\": \"Contact\",\n          \"companyName\": \"Customer One\",\n          \"contactMethods\": [\n            {\n              \"method\": \"Phone\",\n              \"value\": \"5554678415\"\n            }\n          ]\n        }\n      ],\n      \"referenceNumbers\": [\n        {\n          \"type\": \"MBOL\",\n          \"value\": \"SIMPMBOL67890\"\n        }\n      ]\n    }\n  ],\n  \"billTos\": [\n    {\n      \"customerCode\": \"C8283603\",\n      \"charges\": [\n        {\n          \"rate\": 132.45,\n          \"rateCode\": \"405\",\n          \"alternateDescription\": \"Fuel Surcharge\"\n        }\n      ],\n      \"currencyCode\": \"USD\",\n      \"contacts\": [\n        {\n          \"name\": \"Contact One\",\n          \"type\": \"Contact\",\n          \"companyName\": \"Customer One\",\n          \"contactMethods\": [\n            {\n              \"method\": \"Phone\",\n              \"value\": \"5554678415\"\n            }\n          ]\n        }\n      ],\n      \"referenceNumbers\": [\n        {\n          \"type\": \"SHID\",\n          \"value\": \"SIMPSHID67890\"\n        }\n      ]\n    }\n  ],\n  \"services\": [\n    {\n      \"serviceLevel\": \"Standard\",\n      \"sellMode\": \"TL\",\n      \"locations\": [\n        {\n          \"customerLocationId\": \"W541849\",\n          \"type\": \"origin\",\n          \"sequenceNumber\": 1,\n          \"name\": \"Origin Location\",\n          \"address\": {\n            \"address1\": \"14800 Charlson Rd\",\n            \"address2\": \"Building 1\",\n            \"address3\": \"Floor 2\",\n            \"address4\": \"Room 212\",\n            \"city\": \"Eden Prairie\",\n            \"county\": \"Hennepin\",\n            \"lat\": 31.717096,\n            \"long\": -99.132553,\n            \"stateProvinceCode\": \"MN\",\n            \"postalCode\": \"55347\",\n            \"country\": \"US\"\n          },\n          \"openDateTime\": \"2019-03-18T17:23:48.983Z\",\n          \"closeDateTime\": \"2019-03-19T17:23:48.984Z\",\n          \"scheduledOpenDateTime\": \"2019-03-18T17:23:48.983Z\",\n          \"scheduledCloseDateTime\": \"2019-03-19T17:23:48.984Z\",\n          \"scalesRequired\": false,\n          \"hasDropTrailer\": false,\n          \"specialInstructions\": \"Stay hungry. Stay foolish. -Steve Jobs\",\n          \"contacts\": [\n            {\n              \"name\": \"Warehouse Contact\",\n              \"type\": \"Contact\",\n              \"companyName\": \"Warehouse One\",\n              \"contactMethods\": [\n                {\n                  \"method\": \"Phone\",\n                  \"value\": \"5554678415\"\n                }\n              ]\n            }\n          ],\n          \"referenceNumber\": [\n            {\n              \"type\": \"PU\",\n              \"value\": \"SIMPPU67890\"\n            }\n          ]\n        },\n        {\n          \"customerLocationId\": \"W541849\",\n          \"type\": \"destination\",\n          \"sequenceNumber\": 2,\n          \"name\": \"Destination Location\",\n          \"address\": {\n            \"address1\": \"800 Washington Avenue North\",\n            \"address2\": \"Building 1\",\n            \"address3\": \"Floor 5\",\n            \"address4\": \"Suite 550\",\n            \"city\": \"Minneapolis\",\n            \"county\": \"Hennepin\",\n            \"lat\": 44.989386,\n            \"long\": -93.278626,\n            \"stateProvinceCode\": \"MN\",\n            \"postalCode\": \"55401\",\n            \"country\": \"US\"\n          },\n          \"openDateTime\": \"2019-03-25T17:23:48.984Z\",\n          \"closeDateTime\": \"2019-03-26T17:23:48.984Z\",\n          \"scheduledOpenDateTime\": \"2019-03-25T17:23:48.984Z\",\n          \"scheduledCloseDateTime\": \"2019-03-26T17:23:48.984Z\",\n          \"scalesRequired\": false,\n          \"hasDropTrailer\": false,\n          \"specialInstructions\": \"Whatever you are, be a good one. -Abraham Lincoln\",\n          \"contacts\": [\n            {\n              \"name\": \"Contact two\",\n              \"type\": \"Contact\",\n              \"companyName\": \"Warehouse Two\",\n              \"contactMethods\": [\n                {\n                  \"method\": \"Phone\",\n                  \"value\": \"5554678415\"\n                }\n              ]\n            }\n          ],\n          \"referenceNumbers\": [\n            {\n              \"type\": \"DEL\",\n              \"value\": \"SIMPDEL67890\"\n            }\n          ]\n        }\n      ],\n      \"items\": [\n        {\n          \"packagingType\": \"Case\",\n          \"quantity\": 50,\n          \"description\": \"Widgets\",\n          \"productCode\": \"123-45\",\n          \"freightClass\": \"70\",\n          \"weight\": 45000,\n          \"weightUnitOfMeasure\": \"Pounds\",\n          \"packagingLength\": 2,\n          \"packagingWidth\": 2,\n          \"packagingHeight\": 2,\n          \"packagingUnitOfMeasure\": \"Inches\",\n          \"equipmentLength\": 48,\n          \"equipmentHeight\": 9,\n          \"equipmentWidth\": 8,\n          \"equipmentUnitOfMeasure\": \"Feet\",\n          \"packagingVolume\": 7680,\n          \"packagingVolumeUnitOfMeasure\": \"CubicFeet\",\n          \"insuranceValue\": 1000,\n          \"pallets\": 1,\n          \"palletSpaces\": 1,\n          \"nationalMotorFreightClass\": \"50\",\n          \"hazardousProperties\": {\n            \"description\": \"Hazardous Material\",\n            \"technicalName\": \"Technically Hazardous\",\n            \"unNumber\": \"2796\",\n            \"classCode\": \"8\",\n            \"packagingGroup\": \"Group I\",\n            \"emergencyPhone\": \"911\",\n            \"authCode\": \"D\",\n            \"isPlacarded\": false,\n            \"isReportableQuantity\": false,\n            \"isPrimaryCommodity\": false,\n            \"isNOSCommodity\": false\n          },\n          \"upcNumber\": \"1234567890\",\n          \"skuNumber\": \"01234-001-F10-6\",\n          \"isStackable\": false,\n          \"isTemperatureSensitive\": true,\n          \"temperatureType\": \"Dry\",\n          \"temperatureUnit\": \"Celsius\",\n          \"requiredTemperatureHigh\": 32,\n          \"requiredTemperatureLow\": 0,\n          \"referenceNumbers\": [\n            {\n              \"type\": \"PO\",\n              \"value\": \"SIMPPO67890\"\n            }\n          ]\n        }\n      ],\n      \"collectOnDelivered\": [\n        {\n          \"amount\": 153.24,\n          \"paymentType\": \"CC\",\n          \"payableTo\": \"John Doe\",\n          \"mailTo\": \"Jane Doe\",\n          \"address\": {\n            \"address1\": \"14800 Charlson Rd\",\n            \"address2\": \"Building 1\",\n            \"address3\": \"Floor 5\",\n            \"address4\": \"Room 212\",\n            \"city\": \"Eden Prairie\",\n            \"county\": \"Hennepin\",\n            \"lat\": 34.1548,\n            \"long\": -84.46578,\n            \"stateProvinceCode\": \"MN\",\n            \"postalCode\": \"55347\",\n            \"country\": \"US\"\n          },\n          \"referenceNumbers\": [\n            {\n              \"type\": \"MBOL\",\n              \"value\": \"12345687\"\n            }\n          ]\n        }\n      ],\n      \"referenceNumbers\": [\n        {\n          \"type\": \"PRO\",\n          \"value\": \"SIMPPRO67890\"\n        }\n      ]\n    }\n  ],\n  \"measurementSystem\": \"Standard\",\n  \"referenceNumbers\": [\n    {\n      \"type\": \"CON\",\n      \"value\": \"CON12321NOC\"\n    },\n    {\n      \"type\": \"JNO\",\n      \"value\": \"NOT A REAL ORDER!!!!!!!!!!\"\n    }\n  ],\n  \"notes\": \"Created through Schema Test\"\n}\")\n .asString();"
+          },
+          {
+            "lang": "NodeJS",
+            "source": " var request = require(\"request\"); \n\n\nvar options = { method: 'POST',\n \turl: 'https://sandbox-api.navisphere.com/v1/orders',\n \theaders: \n \t{ Authorization: 'Bearer YOU TOKEN',\n \t\t'Content-Type': 'application/json' },\n \tbody: { \n \tcustomers: \n \t\t[ { customerCode: 'C8283603', \n \t\t\tcontacts: \n \t\t\t[ { name: 'Contact One',\n \t\t\t\ttype: 'Contact',\n \t\t\t\tcompanyName: 'Customer One',\n \t\t\t\tcontactMethods: [ { method: 'Phone', value: '5554678415' } ] } ],\n \t\t\treferenceNumbers: [ { type: 'MBOL', value: 'SIMPMBOL67890' } ] } ],\n \tbillTos: \n \t\t[ { customerCode: 'C8283603',\n \t\t\tcharges: \n \t\t\t[ { rate: 132.45,\n \t\t\t\trateCode: '405',\n \t\t\t\talternateDescription: 'Fuel Surcharge' } ],\n \t\t\tcurrencyCode: 'USD',\n \t\t\tcontacts: \n \t\t\t[ { name: 'Contact One',\n \t\t\t\ttype: 'Contact',\n \t\t\t\tcompanyName: 'Customer One',\n \t\t\t\tcontactMethods: [ { method: 'Phone', value: '5554678415' } ] } ],\n \t\t\treferenceNumbers: [ { type: 'SHID', value: 'SIMPSHID67890' } ] } ],\n \tservices: \n \t\t[ { serviceLevel: 'Standard',\n \t\t\tsellMode: 'TL',\n \t\t\tlocations: \n \t\t\t[ { customerLocationId: 'W541849',\n \t\t\t\ttype: 'origin',\n \t\t\t\tsequenceNumber: 1,\n \t\t\t\tname: 'Origin Location',\n \t\t\t\taddress: { \n \t\t\t\t\taddress1: '14800 Charlson Rd',\n \t\t\t\t\taddress2: 'Building 1',\n \t\t\t\t\taddress3: 'Floor 2',\n \t\t\t\t\taddress4: 'Room 212',\n \t\t\t\t\tcity: 'Eden Prairie',\n \t\t\t\t\tcounty: 'Hennepin',\n \t\t\t\t\tlat: 31.717096,\n \t\t\t\t\tlong: -99.132553,\n \t\t\t\t\tstateProvinceCode: 'MN',\n \t\t\t\t\tpostalCode: '55347',\n \t\t\t\t\tcountry: 'US' },\n \t\t\t\topenDateTime: '2019-03-18T17:23:48.983Z',\n \t\t\t\tcloseDateTime: '2019-03-19T17:23:48.984Z',\n \t\t\t\tscheduledOpenDateTime: '2019-03-18T17:23:48.983Z',\n \t\t\t\tscheduledCloseDateTime: '2019-03-19T17:23:48.984Z',\n \t\t\t\tscalesRequired: false,\n \t\t\t\thasDropTrailer: false,\n \t\t\t\tspecialInstructions: 'Stay hungry. Stay foolish. -Steve Jobs',\n \t\t\t\tcontacts:[ {  \n \t\t\t\t\tname: 'Warehouse Contact',\n \t\t\t\t\ttype: 'Contact',\n \t\t\t\t\tcompanyName: 'Warehouse One',\n \t\t\t\t\tcontactMethods: [ { method: 'Phone', value: '5554678415' } ] } ],\n \t\t\t\treferenceNumber: [ { type: 'PU', value: 'SIMPPU67890' } ] },{ \n \t\t\t\tcustomerLocationId: 'W541849',\n \t\t\t\ttype: 'destination',\n \t\t\t\tsequenceNumber: 2,\n \t\t\t\tname: 'Destination Location',\n \t\t\t\taddress: { \n \t\t\t\t\taddress1: '800 Washington Avenue North',\n \t\t\t\t\taddress2: 'Building 1',\n \t\t\t\t\taddress3: 'Floor 5',\n \t\t\t\t\taddress4: 'Suite 550',\n \t\t\t\t\tcity: 'Minneapolis',\n \t\t\t\t\tcounty: 'Hennepin',\n \t\t\t\t\tlat: 44.989386,\n \t\t\t\t\tlong: -93.278626,\n \t\t\t\t\tstateProvinceCode: 'MN',\n \t\t\t\t\tpostalCode: '55401',\n \t\t\t\t\tcountry: 'US' },\n \t\t\t\topenDateTime: '2019-03-25T17:23:48.984Z',\n \t\t\t\tcloseDateTime: '2019-03-26T17:23:48.984Z',\n \t\t\t\tscheduledOpenDateTime: '2019-03-25T17:23:48.984Z',\n \t\t\t\tscheduledCloseDateTime: '2019-03-26T17:23:48.984Z',\n \t\t\t\tscalesRequired: false,\n \t\t\t\thasDropTrailer: false,\n \t\t\t\tspecialInstructions: 'Whatever you are, be a good one. -Abraham Lincoln',\n \t\t\t\tcontacts: [ { \n \t\t\t\t\tname: 'Contact two',\n \t\t\t\t\ttype: 'Contact',\n \t\t\t\t\tcompanyName: 'Warehouse Two',\n \t\t\t\t\tcontactMethods: [ { method: 'Phone', value: '5554678415' } ] } ],\n \t\t\t\treferenceNumbers: [ { type: 'DEL', value: 'SIMPDEL67890' } ] } ],\n \t\t\titems: [ { \n \t\t\t\tpackagingType: 'Case',\n \t\t\t\tquantity: 50,\n \t\t\t\tdescription: 'Widgets',\n \t\t\t\tproductCode: '123-45',\n \t\t\t\tfreightClass: '70',\n \t\t\t\tweight: 45000,\n \t\t\t\tweightUnitOfMeasure: 'Pounds',\n \t\t\t\tpackagingLength: 2,\n \t\t\t\tpackagingWidth: 2,\n \t\t\t\tpackagingHeight: 2,\n \t\t\t\tpackagingUnitOfMeasure: 'Inches',\n \t\t\t\tequipmentLength: 48,\n \t\t\t\tequipmentHeight: 9,\n \t\t\t\tequipmentWidth: 8,\n \t\t\t\tequipmentUnitOfMeasure: 'Feet',\n \t\t\t\tpackagingVolume: 7680,\n \t\t\t\tpackagingVolumeUnitOfMeasure: 'CubicFeet',\n \t\t\t\tinsuranceValue: 1000,\n \t\t\t\tpallets: 1,\n \t\t\t\tpalletSpaces: 1,\n \t\t\t\tnationalMotorFreightClass: '50',\n \t\t\t\thazardousProperties: { \n \t\t\t\t\tdescription: 'Hazardous Material',\n \t\t\t\t\ttechnicalName: 'Technically Hazardous',\n \t\t\t\t\tunNumber: '2796',\n \t\t\t\t\tclassCode: '8',\n \t\t\t\t\tpackagingGroup: 'Group I',\n \t\t\t\t\temergencyPhone: '911',\n \t\t\t\t\tauthCode: 'D',\n \t\t\t\t\tisPlacarded: false,\n \t\t\t\t\tisReportableQuantity: false,\n \t\t\t\t\tisPrimaryCommodity: false,\n \t\t\t\t\tisNOSCommodity: false },\n \t\t\t\tupcNumber: '1234567890',\n \t\t\t\tskuNumber: '01234-001-F10-6',\n \t\t\t\tisStackable: false,\n \t\t\t\tisTemperatureSensitive: true,\n \t\t\t\ttemperatureType: 'Dry',\n \t\t\t\ttemperatureUnit: 'Celsius',\n \t\t\t\trequiredTemperatureHigh: 32,\n \t\t\t\trequiredTemperatureLow: 0,\n \t\t\t\treferenceNumbers: [ { type: 'PO', value: 'SIMPPO67890' } ] } ],\n \t\t\tcollectOnDelivered: [ { \n \t\t\t\tamount: 153.24,\n \t\t\t\tpaymentType: 'CC',\n \t\t\t\tpayableTo: 'John Doe',\n \t\t\t\tmailTo: 'Jane Doe',\n \t\t\t\taddress: { \n \t\t\t\t\taddress1: '14800 Charlson Rd',\n \t\t\t\t\taddress2: 'Building 1',\n \t\t\t\t\taddress3: 'Floor 5',\n \t\t\t\t\taddress4: 'Room 212',\n \t\t\t\t\tcity: 'Eden Prairie',\n \t\t\t\t\tcounty: 'Hennepin',\n \t\t\t\t\tlat: 34.1548,\n \t\t\t\t\tlong: -84.46578,\n \t\t\t\t\tstateProvinceCode: 'MN',\n \t\t\t\t\tpostalCode: '55347',\n \t\t\t\t\tcountry: 'US' },\n \t\t\t\treferenceNumbers: [ { type: 'MBOL', value: '12345687' } ] } ],\n \t\t\treferenceNumbers: [ { type: 'PRO', value: 'SIMPPRO67890' } ] } ],\n \t\tmeasurementSystem: 'Standard',\n \t\treferenceNumbers: [ { \n \t\t\ttype: 'CON', value: 'CON12321NOC' },{ \n \t\t\ttype: 'JNO', value: 'NOT A REAL ORDER!!!!!!!!!!' } ],\n \t\tnotes: 'Created through Schema Test' },\n \tjson: true };\n\n\nrequest(options, function (error, response, body) {\n \tif (error) throw new Error(error);\n\n\n\tconsole.log(body);\n });"
+          },
+          {
+            "lang": "C#",
+            "source": " var client = new RestClient(\"https://sandbox-api.navisphere.com/v1/orders\"); \n var request = new RestRequest(Method.POST); \n request.AddHeader(\"Authorization\", \"Bearer YOU TOKEN\"); \n request.AddHeader(\"Content-Type\", \"application/json\"); \n request.AddParameter(\"undefined\", \" {\n  \"customers\": [\n    {\n      \"customerCode\": \"C8283603\",\n      \"contacts\": [\n        {\n          \"name\": \"Contact One\",\n           \"type\": \"Contact\",\n          \"companyName\": \"Customer One\",\n          \"contactMethods\": [\n            {\n              \"method\": \"Phone\",\n               \"value\": \"5554678415\"\n            }\n          ]\n        }\n      ],\n      \"referenceNumbers\": [\n        {\n          \"type\": \"MBOL\",\n           \"value\": \"SIMPMBOL67890\"\n        }\n      ]\n    }\n  ],\n  \"billTos\": [\n    {\n      \"customerCode\": \"C8283603\",\n      \"charges\": [\n        {\n          \"rate\": 132.45,\n          \"rateCode\": \"405\",\n          \"alternateDescription\": \"Fuel Surcharge\"\n        }\n      ],\n      \"currencyCode\": \"USD\",\n       \"contacts\": [\n        {\n          \"name\": \"Contact One\",\n          \"type\": \"Contact\",\n          \"companyName\": \"Customer One\",\n          \"contactMethods\":  [\n            {\n              \"method\": \"Phone\",\n              \"value\": \"5554678415\"\n            }\n          ]\n        }\n      ],\n      \"referenceNumbers\":  [\n        {\n          \"type\": \"SHID\",\n          \"value\": \"SIMPSHID67890\"\n        }\n      ]\n    }\n  ],\n  \"services\": [\n     {\n      \"serviceLevel\": \"Standard\",\n      \"sellMode\": \"TL\",\n      \"locations\": [\n        {\n          \"customerLocationId\": \"W541849\",\n          \"type\":  \"origin\",\n          \"sequenceNumber\": 1,\n          \"name\": \"Origin Location\",\n          \"address\": {\n            \"address1\": \"14800 Charlson Rd\",\n             \"address2\": \"Building 1\",\n            \"address3\": \"Floor 2\",\n            \"address4\": \"Room 212\",\n            \"city\": \"Eden Prairie\",\n             \"county\": \"Hennepin\",\n            \"lat\": 31.717096,\n            \"long\": -99.132553,\n            \"stateProvinceCode\": \"MN\",\n            \"postalCode\":  \"55347\",\n            \"country\": \"US\"\n          },\n          \"openDateTime\": \"2019-03-18T17:23:48.983Z\",\n          \"closeDateTime\": \"2019-03-19T17:23:48.984Z\",\n      \"scheduledOpenDateTime\": \"2019-03-18T17:23:48.983Z\",\n          \"scheduledCloseDateTime\": \"2019-03-19T17:23:48.984Z\",\n          \"scalesRequired\": false,\n          \"hasDropTrailer\": false,\n          \"specialInstructions\": \"Stay hungry. Stay foolish. -Steve Jobs\",\n          \"contacts\": [\n            {\n              \"name\":  \"Warehouse Contact\",\n              \"type\": \"Contact\",\n              \"companyName\": \"Warehouse One\",\n              \"contactMethods\": [\n                {\n    \"method\": \"Phone\",\n                  \"value\": \"5554678415\"\n                }\n              ]\n            }\n          ],\n         \"referenceNumber\": [\n            {\n              \"type\": \"PU\",\n              \"value\": \"SIMPPU67890\"\n            }\n          ]\n        },\n {\n          \"customerLocationId\": \"W541849\",\n          \"type\": \"destination\",\n          \"sequenceNumber\": 2,\n          \"name\": \"Destination Location\",\n    \"address\": {\n            \"address1\": \"800 Washington Avenue North\",\n            \"address2\": \"Building 1\",\n            \"address3\": \"Floor 5\",\n      \"address4\": \"Suite 550\",\n            \"city\": \"Minneapolis\",\n            \"county\": \"Hennepin\",\n            \"lat\": 44.989386,\n       \"long\": -93.278626,\n            \"stateProvinceCode\": \"MN\",\n            \"postalCode\": \"55401\",\n            \"country\": \"US\"\n    },\n          \"openDateTime\": \"2019-03-25T17:23:48.984Z\",\n          \"closeDateTime\": \"2019-03-26T17:23:48.984Z\",\n      \"scheduledOpenDateTime\": \"2019-03-25T17:23:48.984Z\",\n          \"scheduledCloseDateTime\": \"2019-03-26T17:23:48.984Z\",\n      \"scalesRequired\": false,\n          \"hasDropTrailer\": false,\n         \"specialInstructions\": \"Whatever you are, be a good one. -Abraham Lincoln\",\n        \"contacts\": [\n            {\n              \"name\": \"Contact two\",\n    \"type\": \"Contact\",\n              \"companyName\": \"Warehouse Two\",\n       \"contactMethods\": [\n                {\n                  \"method\": \"Phone\",\n           \"value\": \"5554678415\"\n                }\n              ]\n            }\n          ],\n       \"referenceNumbers\": [\n            {\n              \"type\": \"DEL\",\n       \"value\": \"SIMPDEL67890\"\n            }\n          ]\n        }\n      ],\n      \"items\": [\n     {\n          \"packagingType\": \"Case\",\n          \"quantity\": 50,\n    \"description\": \"Widgets\",\n          \"productCode\": \"123-45\",\n         \"freightClass\": \"70\",\n          \"weight\": 45000,\n        \"weightUnitOfMeasure\": \"Pounds\",\n          \"packagingLength\": 2,\n         \"packagingWidth\": 2,\n          \"packagingHeight\": 2,\n          \"packagingUnitOfMeasure\": \"Inches\",\n          \"equipmentLength\": 48,\n     \"equipmentHeight\": 9,\n          \"equipmentWidth\": 8,\n          \"equipmentUnitOfMeasure\": \"Feet\",\n          \"packagingVolume\": 7680,\n          \"packagingVolumeUnitOfMeasure\": \"CubicFeet\",\n    \"insuranceValue\": 1000,\n          \"pallets\": 1,\n          \"palletSpaces\": 1,\n          \"nationalMotorFreightClass\": \"50\",\n          \"hazardousProperties\": {\n        \"description\": \"Hazardous Material\",\n            \"technicalName\": \"Technically Hazardous\",\n          \"unNumber\": \"2796\",\n            \"classCode\": \"8\",\n            \"packagingGroup\": \"Group I\",\n     \"emergencyPhone\": \"911\",\n            \"authCode\": \"D\",\n            \"isPlacarded\": false,\n     \"isReportableQuantity\": false,\n            \"isPrimaryCommodity\": false,\n            \"isNOSCommodity\": false\n  },\n          \"upcNumber\": \"1234567890\",\n          \"skuNumber\": \"01234-001-F10-6\",\n        \"isStackable\": false,\n          \"isTemperatureSensitive\": true,\n          \"temperatureType\": \"Dry\",\n   \"temperatureUnit\": \"Celsius\",\n          \"requiredTemperatureHigh\": 32,\n   \"requiredTemperatureLow\": 0,\n          \"referenceNumbers\": [\n            {\n         \"type\": \"PO\",\n              \"value\": \"SIMPPO67890\"\n            }\n          ]\n        }\n      ],\n \"collectOnDelivered\": [\n        {\n          \"amount\": 153.24,\n      \"paymentType\": \"CC\",\n          \"payableTo\": \"John Doe\",\n          \"mailTo\": \"Jane Doe\",\n        \"address\": {\n            \"address1\": \"14800 Charlson Rd\",\n            \"address2\": \"Building 1\",\n      \"address3\": \"Floor 5\",\n            \"address4\": \"Room 212\",\n            \"city\": \"Eden Prairie\",\n   \"county\": \"Hennepin\",\n            \"lat\": 34.1548,\n            \"long\": -84.46578,\n        \"stateProvinceCode\": \"MN\",\n            \"postalCode\": \"55347\",\n            \"country\": \"US\"\n        },\n          \"referenceNumbers\": [\n            {\n              \"type\": \"MBOL\",\n            \"value\": \"12345687\"\n            }\n          ]\n        }\n      ],\n      \"referenceNumbers\": [\n   {\n          \"type\": \"PRO\",\n          \"value\": \"SIMPPRO67890\"\n        }\n      ]\n   }\n  ],\n  \"measurementSystem\": \"Standard\",\n  \"referenceNumbers\": [\n    {\n   \"type\": \"CON\",\n      \"value\": \"CON12321NOC\"\n    },\n    {\n      \"type\": \"JNO\",\n  \"value\": \"NOT A REAL ORDER!!!!!!!!!!\"\n    }\n  ],\n  \"notes\": \"Created through Schema Test\"\n}\", ParameterType.RequestBody);\n IRestResponse response = client.Execute(request);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Please contact your XPO representive."
+          }
+        }
+      }
+    },
+    "/OrderService/rest/V1/CreateOrder": {
+      "post": {
+        "description": "Allows partner to create an order at XPO. User must provide valid API Key and token as header parameter and order details as request payload.",
+        "operationId": "Create Order",
+        "tags": [
+          "Order API"
+        ],
+        "parameters": [
+          {
+            "required": true,
+            "in": "header",
+            "description": "Api Key as provided by XPO.",
+            "name": "x-api-key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "required": true,
+            "in": "header",
+            "description": "Valid bearer token generated using Token API.",
+            "name": "xpoauthorization",
+            "schema": {
+              "type": "JWT token"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "JSON object of Order information.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderRequest"
+              },
+              "examples": {
+                "Payload": {
+                  "value": {
+                    "OrderDate": "2020-02-13T12:08:09.31",
+                    "AccountId": 223,
+                    "ContractId": "119",
+                    "OrderReferenceNumbers": [
+                      {
+                        "Code": "CUSTOM_CODE",
+                        "Type": "CLIENT_REFERENCE",
+                        "Value": "8525 - GRANDE PRAIRIE PRO SOLUTIONS"
+                      }
+                    ],
+                    "OrderNotes": [
+                      {
+                        "Type": "Reason",
+                        "Value": "BRNCH FLT/MAX CAPACTY"
+                      }
+                    ],
+                    "OrderContactInformations": [
+                      {
+                        "firstName": "TestData",
+                        "lastName": "Lname",
+                        "email": "devcustomer@gmail.com",
+                        "PhoneNumbers": [
+                          {
+                            "Type": "Mobile",
+                            "Number": "6606546565"
+                          }
+                        ],
+                        "Title": "Mr",
+                        "isPrimary": false
+                      }
+                    ],
+                    "OrderServices": [
+                      {
+                        "Code": "12151",
+                        "Name": "Room of Choice Delivery",
+                        "Description": "Base delivery charge for IKEA.",
+                        "Quantity": 1,
+                        "UnitofMeasure": "Items Hauled Away"
+                      }
+                    ],
+                    "OrderDocuments": [
+                      {
+                        "Type": "30",
+                        "Name": "28-FEB-2019.xlsx",
+                        "Key": "0000040VD7CES000000000"
+                      }
+                    ],
+                    "CrossSellOrderNumber": "",
+                    "SalesReps": [
+                      {
+                        "firstName": "TestData",
+                        "lastName": "Lname",
+                        "email": "devcustomer@gmail.com",
+                        "PhoneNumbers": [
+                          {
+                            "Type": "Mobile",
+                            "Number": "6606546565"
+                          }
+                        ],
+                        "Title": "",
+                        "isPrimary": false
+                      }
+                    ],
+                    "Stops": [
+                      {
+                        "LocationId": "MENLO/A017.100014",
+                        "LocationName": "9712 - BELLEVUE WA",
+                        "LocationType": "Warehouse",
+                        "AddressLine1": "ADDRESS2",
+                        "AddressLine2": "",
+                        "CityName": "KENMORE",
+                        "CountryCode": "USA",
+                        "GeoCodes": {
+                          "Longitude": -80.813,
+                          "Latitude": 35.0533,
+                          "S2CellId": null
+                        },
+                        "ScheduledTimeFrom": "2020-02-20T08:00:00",
+                        "ScheduledTimeTo": null,
+                        "IsAppointmentRequired": false,
+                        "IsAppointmentConfirmed": false,
+                        "StateCode": "WA",
+                        "Type": "Pickup",
+                        "ZipCode": "98028",
+                        "Region": null,
+                        "SpecialRequirements": [
+                          {
+                            "Type": "LIFTGATE",
+                            "Value": "1"
+                          }
+                        ],
+                        "StopReferenceNumbers": [
+                          {
+                            "Code": "CUSTOM_CODE",
+                            "Type": "CLIENT_REFERENCE",
+                            "Value": "8525 - GRANDE PRAIRIE PRO SOLUTIONS"
+                          }
+                        ],
+                        "StopNotes": [
+                          {
+                            "Type": "Reason",
+                            "Value": "BRNCH FLT/MAX CAPACTY"
+                          }
+                        ],
+                        "StopContactInformations": [
+                          {
+                            "firstName": "TestData",
+                            "lastName": "Lname",
+                            "email": "devcustomer@gmail.com",
+                            "PhoneNumbers": [
+                              {
+                                "Type": "Mobile",
+                                "Number": "6606546565"
+                              }
+                            ],
+                            "Title": "",
+                            "isPrimary": false
+                          }
+                        ]
+                      }
+                    ],
+                    "RequestedDeliveryDate": "2020-02-27T15:00:00",
+                    "TransportationMode": "SEA",
+                    "Items": [
+                      {
+                        "ItemCode": "100-1900",
+                        "ItemNumber": "100056006",
+                        "ItemDescription": "CONCRETE BUCKET 1/2 YD",
+                        "Units": 1,
+                        "UnitTypeCode": "EACH",
+
+                        "PackageUnits": 2,
+                        "PackageTypeCode": "BAG",
+                        "Weight": 330,
+                        "WeightUomCode": "LB",
+                        "Height": 99.999,
+                        "HeightUomCode": "IN",
+                        "Length": 99.999,
+                        "LengthUomCode": "IN",
+                        "Width": 150,
+                        "WidthUomCode": "IN",
+                        "DeclaredValue": 2285.89,
+                        "DeclaredValueCurrencyCode": "USD",
+                        "Volume": 868.0386,
+                        "VolumeUomCode": "CUFT",
+                        "ItemPrice": 20.50,
+                        "ItemPriceCurrencyCode": "USD",
+                        "IsHazmat": false,
+                        "IsTemperatureControlled": false,
+                        "TemperatureHigh": null,
+                        "TemperatureLow": null,
+                        "TemperatureHighUOM": null,
+                        "TemperatureLowUOM": null,
+                        "HazardousItemInfo": {
+                          "UNNumber": 0,
+                          "PackingGroup": 0,
+                          "ReceptacleSize": 0,
+                          "HazardousClass": null,
+                          "NumberofReceptacles": 0,
+                          "UnitofMeasure": null,
+                          "ContainerType": null,
+                          "HazardousDescription": null,
+                          "HazardousPhoneNumber": null,
+                          "ShippingName": null
+                        },
+
+                        "HTSCode": null,
+                        "SKU": "Sku00001",
+                        "PurchaseOrderNumber": null,
+                        "IsOversized": null,
+                        "IsStackable": null,
+                        "ItemReferenceNumbers": [
+                          {
+                            "Code": "CUSTOM_CODE",
+                            "Type": "CLIENT_REFERENCE",
+                            "Value": "8525 - GRANDE PRAIRIE PRO SOLUTIONS"
+                          }
+                        ],
+                        "ItemNotes": [
+                          {
+                            "Type": "Reason",
+                            "Value": "BRNCH FLT/MAX CAPACTY"
+                          }
+                        ],
+                        "ItemServices": [
+                          {
+                            "Code": "12151",
+                            "Name": "Room of Choice Delivery",
+                            "Description": "Base delivery charge for IKEA.",
+                            "Quantity": 1,
+                            "UnitofMeasure": "Items Hauled Away"
+                          }
+                        ]
+                      }
+                    ],
+                    "IsPartOfConsolidatedShipment": false,
+                    "OrdersOnConsolidatedShipment": 1,
+                    "IsExpedited": false,
+                    "IsXpoManaged": true,
+                    "PaymentCode": "PPD",
+                    "EquipmentTypeCode": "CS",
+                    "EquipmentCategoryCode": "VN",
+                    "QuoteId": "121234",
+                    "InvoiceDate": "2020-02-13T12:08:09.314Z",
+                    "InvoiceNumber": "HBTestFeb132018"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "Curl",
+            "source": "curl -X POST \\\n  https://api-np-connect.xpo.com//OrderService/rest/V1/CreateOrder \\\n  -H 'accept: application/json' \\\n  -H 'cache-control: no-cache' \\\n  -H 'content-type: application/json' \\\n  -H 'x-api-key: 40ec79b5-c174-4d5b-9a62-ccce41563ed5' \\\n  -H 'xpoauthorization: bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkU1OEQ3N0M3MEE2MkRCMUQwMDYwODRCNUNCREI0QkVBMUJGRjhGM0YiLCJ0eXAiOiJKV1QiLCJ4NXQiOiI1WTEzeHdwaTJ4MEFZSVMxeTl0TDZodl9qejgifQ.eyJuYmYiOjE1ODgwMDI1ODAsImV4cCI6MTU4ODAwOTc4MCwiaXNzIjoiaHR0cHM6Ly9sb2dpbi1zYW5kYm94LmF1dGh4cG8uY29tIiwiYXVkIjpbImh0dHBzOi8vbG9naW4tc2FuZGJveC5hdXRoeHBvLmNvbS9yZXNvdXJjZXMiLCJ4cG8tcmF0ZXMtYXBpIl0sImNsaWVudF9pZCI6Inhwby1rcmFmdC1oZWluei1pbnRlZ3JhdGlvbiIsInNjb3BlIjpbInhwby1yYXRlcy1hcGkiXX0.X8becPIw-gJqMDZlMy3XqDIDe-GiUNznnZQ2j9nd4PKxXkzCBOIDYlvfFrlg29T1PSw8_mfV2V2f0sTmvyBVN3Z4GKjmQb98Wm8P0KaQnJsNEL1uQeR5kQSKuVvgyJCKMCh6aSfcRmrzjiEtcKkClVWaiAyjUsN_2d040rrmuhimvnD5kCzwUoYbUf1Ik9NA-o0_qt2-vRbPFTvaf7c_cqX8jZ7JJNjiLW59To0SHButaKFQSdbxYpFS87n9walEzjit5UGZYPhxbNk0K0kakc_59jf-pFm1783MAm2NX5mFOyi3jtFl9OQAM_clWx6bdiXfWHaJmEeUDAG51KX9jw`' \\\n  -d '{\n                    \"OrderDate\": \"2020-02-13T12:08:09.31\",\n                    \"AccountId\": 223,\n                    \"ContractId\": \"119\",\n                    \"OrderReferenceNumbers\": [\n                      {\n                        \"Code\": \"CUSTOM_CODE\",\n                        \"Type\": \"CLIENT_REFERENCE\",\n                        \"Value\": \"8525 - GRANDE PRAIRIE PRO SOLUTIONS\"\n                      }\n                    ],\n                    \"OrderNotes\": [\n                      {\n                        \"Type\": \"Reason\",\n                        \"Value\": \"BRNCH FLT/MAX CAPACTY\"\n                      }\n                    ],\n                    \"OrderContactInformations\": [\n                      {\n                        \"firstName\": \"TestData\",\n                        \"lastName\": \"Lname\",\n                        \"email\": \"devcustomer@gmail.com\",\n                        \"PhoneNumbers\": [\n                          {\n                            \"Type\": \"Mobile\",\n                            \"Number\": \"6606546565\"\n                          }\n                        ],\n                        \"Title\": \"Mr\",\n                        \"isPrimary\": false\n                      }\n                    ],\n                    \"OrderServices\": [\n                      {\n                        \"Code\": \"12151\",\n                        \"Name\": \"Room of Choice Delivery\",\n                        \"Description\": \"Base delivery charge for IKEA.\",\n                        \"Quantity\": 1,\n                        \"UnitofMeasure\": \"Items Hauled Away\"\n                      }\n                    ],\n                    \"OrderDocuments\": [\n                      {\n                        \"Type\": \"30\",\n                        \"Name\": \"28-FEB-2019.xlsx\",\n                        \"Key\": \"0000040VD7CES000000000\"\n                      }\n                    ],\n                    \"CrossSellOrderNumber\": \"\",\n                    \"SalesReps\": [\n                      {\n                        \"firstName\": \"TestData\",\n                        \"lastName\": \"Lname\",\n                        \"email\": \"devcustomer@gmail.com\",\n                        \"PhoneNumbers\": [\n                          {\n                            \"Type\": \"Mobile\",\n                            \"Number\": \"6606546565\"\n                          }\n                        ],\n                        \"Title\": \"\",\n                        \"isPrimary\": false\n                      }\n                    ],\n                    \"Stops\": [\n                      {\n                        \"LocationId\": \"MENLO/A017.100014\",\n                        \"LocationName\": \"9712 - BELLEVUE WA\",\n                        \"LocationType\": \"Warehouse\",\n                        \"AddressLine1\": \"ADDRESS2\",\n                        \"AddressLine2\": \"\",\n                        \"CityName\": \"KENMORE\",\n                        \"CountryCode\": \"USA\",\n                        \"GeoCodes\": {\n                          \"Longitude\": -80.813,\n                          \"Latitude\": 35.0533,\n                          \"S2CellId\": null\n                        },\n                        \"ScheduledTimeFrom\": \"2020-02-20T08:00:00\",\n                        \"ScheduledTimeTo\": null,\n                        \"IsAppointmentRequired\": false,\n                        \"IsAppointmentConfirmed\": false,\n                        \"StateCode\": \"WA\",\n                        \"Type\": \"Pickup\",\n                        \"ZipCode\": \"98028\",\n                        \"Region\": null,\n                        \"SpecialRequirements\": [\n                          {\n                            \"Type\": \"LIFTGATE\",\n                            \"Value\": \"1\"\n                          }\n                        ],\n                        \"StopReferenceNumbers\": [\n                          {\n                            \"Code\": \"CUSTOM_CODE\",\n                            \"Type\": \"CLIENT_REFERENCE\",\n                            \"Value\": \"8525 - GRANDE PRAIRIE PRO SOLUTIONS\"\n                          }\n                        ],\n                        \"StopNotes\": [\n                          {\n                            \"Type\": \"Reason\",\n                            \"Value\": \"BRNCH FLT/MAX CAPACTY\"\n                          }\n                        ],\n                        \"StopContactInformations\": [\n                          {\n                            \"firstName\": \"TestData\",\n                            \"lastName\": \"Lname\",\n                            \"email\": \"devcustomer@gmail.com\",\n                            \"PhoneNumbers\": [\n                              {\n                                \"Type\": \"Mobile\",\n                                \"Number\": \"6606546565\"\n                              }\n                            ],\n                            \"Title\": \"\",\n                            \"isPrimary\": false\n                          }\n                        ]\n                      }\n                    ],\n                    \"RequestedDeliveryDate\": \"2020-02-27T15:00:00\",\n                    \"TransportationMode\": \"SEA\",\n                    \"Items\": [\n                      {\n                        \"ItemCode\": \"100-1900\",\n                        \"ItemNumber\": \"100056006\",\n                        \"ItemDescription\": \"CONCRETE BUCKET 1/2 YD\",\n                        \"Units\": 1,\n                        \"UnitTypeCode\": \"EACH\",\n\n                        \"PackageUnits\": 2,\n                        \"PackageTypeCode\": \"BAG\",\n                        \"Weight\": 330,\n                        \"WeightUomCode\": \"LB\",\n                        \"Height\": 99.999,\n                        \"HeightUomCode\": \"IN\",\n                        \"Length\": 99.999,\n                        \"LengthUomCode\": \"IN\",\n                        \"Width\": 150,\n                        \"WidthUomCode\": \"IN\",\n                        \"DeclaredValue\": 2285.89,\n                        \"DeclaredValueCurrencyCode\": \"USD\",\n                        \"Volume\": 868.0386,\n                        \"VolumeUomCode\": \"CUFT\",\n                        \"ItemPrice\": 20.50,\n                        \"ItemPriceCurrencyCode\": \"USD\",\n                        \"IsHazmat\": false,\n                        \"IsTemperatureControlled\": false,\n                        \"TemperatureHigh\": null,\n                        \"TemperatureLow\": null,\n                        \"TemperatureHighUOM\": null,\n                        \"TemperatureLowUOM\": null,\n                        \"HazardousItemInfo\": {\n                          \"UNNumber\": 0,\n                          \"PackingGroup\": 0,\n                          \"ReceptacleSize\": 0,\n                          \"HazardousClass\": null,\n                          \"NumberofReceptacles\": 0,\n                          \"UnitofMeasure\": null,\n                          \"ContainerType\": null,\n                          \"HazardousDescription\": null,\n                          \"HazardousPhoneNumber\": null,\n                          \"ShippingName\": null\n                        },\n\n                        \"HTSCode\": null,\n                        \"SKU\": \"Sku00001\",\n                        \"PurchaseOrderNumber\": null,\n                        \"IsOversized\": null,\n                        \"IsStackable\": null,\n                        \"ItemReferenceNumbers\": [\n                          {\n                            \"Code\": \"CUSTOM_CODE\",\n                            \"Type\": \"CLIENT_REFERENCE\",\n                            \"Value\": \"8525 - GRANDE PRAIRIE PRO SOLUTIONS\"\n                          }\n                        ],\n                        \"ItemNotes\": [\n                          {\n                            \"Type\": \"Reason\",\n                            \"Value\": \"BRNCH FLT/MAX CAPACTY\"\n                          }\n                        ],\n                        \"ItemServices\": [\n                          {\n                            \"Code\": \"12151\",\n                            \"Name\": \"Room of Choice Delivery\",\n                            \"Description\": \"Base delivery charge for IKEA.\",\n                            \"Quantity\": 1,\n                            \"UnitofMeasure\": \"Items Hauled Away\"\n                          }\n                        ]\n                      }\n                    ],\n                    \"IsPartOfConsolidatedShipment\": false,\n                    \"OrdersOnConsolidatedShipment\": 1,\n                    \"IsExpedited\": false,\n                    \"IsXpoManaged\": true,\n                    \"PaymentCode\": \"PPD\",\n                    \"EquipmentTypeCode\": \"CS\",\n                    \"EquipmentCategoryCode\": \"VN\",\n                    \"QuoteId\": \"121234\",\n                    \"InvoiceDate\": \"2020-02-13T12:08:09.314Z\",\n                    \"InvoiceNumber\": \"HBTestFeb132018\"\n                  }'"
+          },
+          {
+            "lang": "Java",
+            "source": "OkHttpClient client = new OkHttpClient();\n\nMediaType mediaType = MediaType.parse(\"application/json\");\nRequestBody body = RequestBody.create(mediaType, \"{\\\n                    \\\"OrderDate\\\": \\\"2020-02-13T12:08:09.31\\\",\\\n                    \\\"AccountId\\\": 223,\\\n                    \\\"ContractId\\\": \\\"119\\\",\\\n                    \\\"OrderReferenceNumbers\\\": [\\\n                      {\\\n                        \\\"Code\\\": \\\"CUSTOM_CODE\\\",\\\n                        \\\"Type\\\": \\\"CLIENT_REFERENCE\\\",\\\n                        \\\"Value\\\": \\\"8525 - GRANDE PRAIRIE PRO SOLUTIONS\\\"\\\n                      }\\\n                    ],\\\n                    \\\"OrderNotes\\\": [\\\n                      {\\\n                        \\\"Type\\\": \\\"Reason\\\",\\\n                        \\\"Value\\\": \\\"BRNCH FLT/MAX CAPACTY\\\"\\\n                      }\\\n                    ],\\\n                    \\\"OrderContactInformations\\\": [\\\n                      {\\\n                        \\\"firstName\\\": \\\"TestData\\\",\\\n                        \\\"lastName\\\": \\\"Lname\\\",\\\n                        \\\"email\\\": \\\"devcustomer@gmail.com\\\",\\\n                        \\\"PhoneNumbers\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Mobile\\\",\\\n                            \\\"Number\\\": \\\"6606546565\\\"\\\n                          }\\\n                        ],\\\n                        \\\"Title\\\": \\\"Mr\\\",\\\n                        \\\"isPrimary\\\": false\\\n                      }\\\n                    ],\\\n                    \\\"OrderServices\\\": [\\\n                      {\\\n                        \\\"Code\\\": \\\"12151\\\",\\\n                        \\\"Name\\\": \\\"Room of Choice Delivery\\\",\\\n                        \\\"Description\\\": \\\"Base delivery charge for IKEA.\\\",\\\n                        \\\"Quantity\\\": 1,\\\n                        \\\"UnitofMeasure\\\": \\\"Items Hauled Away\\\"\\\n                      }\\\n                    ],\\\n                    \\\"OrderDocuments\\\": [\\\n                      {\\\n                        \\\"Type\\\": \\\"30\\\",\\\n                        \\\"Name\\\": \\\"28-FEB-2019.xlsx\\\",\\\n                        \\\"Key\\\": \\\"0000040VD7CES000000000\\\"\\\n                      }\\\n                    ],\\\n                    \\\"CrossSellOrderNumber\\\": \\\"\\\",\\\n                    \\\"SalesReps\\\": [\\\n                      {\\\n                        \\\"firstName\\\": \\\"TestData\\\",\\\n                        \\\"lastName\\\": \\\"Lname\\\",\\\n                        \\\"email\\\": \\\"devcustomer@gmail.com\\\",\\\n                        \\\"PhoneNumbers\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Mobile\\\",\\\n                            \\\"Number\\\": \\\"6606546565\\\"\\\n                          }\\\n                        ],\\\n                        \\\"Title\\\": \\\"\\\",\\\n                        \\\"isPrimary\\\": false\\\n                      }\\\n                    ],\\\n                    \\\"Stops\\\": [\\\n                      {\\\n                        \\\"LocationId\\\": \\\"MENLO/A017.100014\\\",\\\n                        \\\"LocationName\\\": \\\"9712 - BELLEVUE WA\\\",\\\n                        \\\"LocationType\\\": \\\"Warehouse\\\",\\\n                        \\\"AddressLine1\\\": \\\"ADDRESS2\\\",\\\n                        \\\"AddressLine2\\\": \\\"\\\",\\\n                        \\\"CityName\\\": \\\"KENMORE\\\",\\\n                        \\\"CountryCode\\\": \\\"USA\\\",\\\n                        \\\"GeoCodes\\\": {\\\n                          \\\"Longitude\\\": -80.813,\\\n                          \\\"Latitude\\\": 35.0533,\\\n                          \\\"S2CellId\\\": null\\\n                        },\\\n                        \\\"ScheduledTimeFrom\\\": \\\"2020-02-20T08:00:00\\\",\\\n                        \\\"ScheduledTimeTo\\\": null,\\\n                        \\\"IsAppointmentRequired\\\": false,\\\n                        \\\"IsAppointmentConfirmed\\\": false,\\\n                        \\\"StateCode\\\": \\\"WA\\\",\\\n                        \\\"Type\\\": \\\"Pickup\\\",\\\n                        \\\"ZipCode\\\": \\\"98028\\\",\\\n                        \\\"Region\\\": null,\\\n                        \\\"SpecialRequirements\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"LIFTGATE\\\",\\\n                            \\\"Value\\\": \\\"1\\\"\\\n                          }\\\n                        ],\\\n                        \\\"StopReferenceNumbers\\\": [\\\n                          {\\\n                            \\\"Code\\\": \\\"CUSTOM_CODE\\\",\\\n                            \\\"Type\\\": \\\"CLIENT_REFERENCE\\\",\\\n                            \\\"Value\\\": \\\"8525 - GRANDE PRAIRIE PRO SOLUTIONS\\\"\\\n                          }\\\n                        ],\\\n                        \\\"StopNotes\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Reason\\\",\\\n                            \\\"Value\\\": \\\"BRNCH FLT/MAX CAPACTY\\\"\\\n                          }\\\n                        ],\\\n                        \\\"StopContactInformations\\\": [\\\n                          {\\\n                            \\\"firstName\\\": \\\"TestData\\\",\\\n                            \\\"lastName\\\": \\\"Lname\\\",\\\n                            \\\"email\\\": \\\"devcustomer@gmail.com\\\",\\\n                            \\\"PhoneNumbers\\\": [\\\n                              {\\\n                                \\\"Type\\\": \\\"Mobile\\\",\\\n                                \\\"Number\\\": \\\"6606546565\\\"\\\n                              }\\\n                            ],\\\n                            \\\"Title\\\": \\\"\\\",\\\n                            \\\"isPrimary\\\": false\\\n                          }\\\n                        ]\\\n                      }\\\n                    ],\\\n                    \\\"RequestedDeliveryDate\\\": \\\"2020-02-27T15:00:00\\\",\\\n                    \\\"TransportationMode\\\": \\\"SEA\\\",\\\n                    \\\"Items\\\": [\\\n                      {\\\n                        \\\"ItemCode\\\": \\\"100-1900\\\",\\\n                        \\\"ItemNumber\\\": \\\"100056006\\\",\\\n                        \\\"ItemDescription\\\": \\\"CONCRETE BUCKET 1/2 YD\\\",\\\n                        \\\"Units\\\": 1,\\\n                        \\\"UnitTypeCode\\\": \\\"EACH\\\",\\\n\\\n                        \\\"PackageUnits\\\": 2,\\\n                        \\\"PackageTypeCode\\\": \\\"BAG\\\",\\\n                        \\\"Weight\\\": 330,\\\n                        \\\"WeightUomCode\\\": \\\"LB\\\",\\\n                        \\\"Height\\\": 99.999,\\\n                        \\\"HeightUomCode\\\": \\\"IN\\\",\\\n                        \\\"Length\\\": 99.999,\\\n                        \\\"LengthUomCode\\\": \\\"IN\\\",\\\n                        \\\"Width\\\": 150,\\\n                        \\\"WidthUomCode\\\": \\\"IN\\\",\\\n                        \\\"DeclaredValue\\\": 2285.89,\\\n                        \\\"DeclaredValueCurrencyCode\\\": \\\"USD\\\",\\\n                        \\\"Volume\\\": 868.0386,\\\n                        \\\"VolumeUomCode\\\": \\\"CUFT\\\",\\\n                        \\\"ItemPrice\\\": 20.50,\\\n                        \\\"ItemPriceCurrencyCode\\\": \\\"USD\\\",\\\n                        \\\"IsHazmat\\\": false,\\\n                        \\\"IsTemperatureControlled\\\": false,\\\n                        \\\"TemperatureHigh\\\": null,\\\n                        \\\"TemperatureLow\\\": null,\\\n                        \\\"TemperatureHighUOM\\\": null,\\\n                        \\\"TemperatureLowUOM\\\": null,\\\n                        \\\"HazardousItemInfo\\\": {\\\n                          \\\"UNNumber\\\": 0,\\\n                          \\\"PackingGroup\\\": 0,\\\n                          \\\"ReceptacleSize\\\": 0,\\\n                          \\\"HazardousClass\\\": null,\\\n                          \\\"NumberofReceptacles\\\": 0,\\\n                          \\\"UnitofMeasure\\\": null,\\\n                          \\\"ContainerType\\\": null,\\\n                          \\\"HazardousDescription\\\": null,\\\n                          \\\"HazardousPhoneNumber\\\": null,\\\n                          \\\"ShippingName\\\": null\\\n                        },\\\n\\\n                        \\\"HTSCode\\\": null,\\\n                        \\\"SKU\\\": \\\"Sku00001\\\",\\\n                        \\\"PurchaseOrderNumber\\\": null,\\\n                        \\\"IsOversized\\\": null,\\\n                        \\\"IsStackable\\\": null,\\\n                        \\\"ItemReferenceNumbers\\\": [\\\n                          {\\\n                            \\\"Code\\\": \\\"CUSTOM_CODE\\\",\\\n                            \\\"Type\\\": \\\"CLIENT_REFERENCE\\\",\\\n                            \\\"Value\\\": \\\"8525 - GRANDE PRAIRIE PRO SOLUTIONS\\\"\\\n                          }\\\n                        ],\\\n                        \\\"ItemNotes\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Reason\\\",\\\n                            \\\"Value\\\": \\\"BRNCH FLT/MAX CAPACTY\\\"\\\n                          }\\\n                        ],\\\n                        \\\"ItemServices\\\": [\\\n                          {\\\n                            \\\"Code\\\": \\\"12151\\\",\\\n                            \\\"Name\\\": \\\"Room of Choice Delivery\\\",\\\n                            \\\"Description\\\": \\\"Base delivery charge for IKEA.\\\",\\\n                            \\\"Quantity\\\": 1,\\\n                            \\\"UnitofMeasure\\\": \\\"Items Hauled Away\\\"\\\n                          }\\\n                        ]\\\n                      }\\\n                    ],\\\n                    \\\"IsPartOfConsolidatedShipment\\\": false,\\\n                    \\\"OrdersOnConsolidatedShipment\\\": 1,\\\n                    \\\"IsExpedited\\\": false,\\\n                    \\\"IsXpoManaged\\\": true,\\\n                    \\\"PaymentCode\\\": \\\"PPD\\\",\\\n                    \\\"EquipmentTypeCode\\\": \\\"CS\\\",\\\n                    \\\"EquipmentCategoryCode\\\": \\\"VN\\\",\\\n                    \\\"QuoteId\\\": \\\"121234\\\",\\\n                    \\\"InvoiceDate\\\": \\\"2020-02-13T12:08:09.314Z\\\",\\\n                    \\\"InvoiceNumber\\\": \\\"HBTestFeb132018\\\"\\\n                  }\");\nRequest request = new Request.Builder()\n  .url(\"https://api-np-connect.xpo.com//OrderService/rest/V1/CreateOrder\")\n  .post(body)\n  .addHeader(\"x-api-key\", \"40ec79b5-c174-4d5b-9a62-ccce41563ed5\")\n  .addHeader(\"xpoauthorization\", \"bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkU1OEQ3N0M3MEE2MkRCMUQwMDYwODRCNUNCREI0QkVBMUJGRjhGM0YiLCJ0eXAiOiJKV1QiLCJ4NXQiOiI1WTEzeHdwaTJ4MEFZSVMxeTl0TDZodl9qejgifQ.eyJuYmYiOjE1ODgwMDI1ODAsImV4cCI6MTU4ODAwOTc4MCwiaXNzIjoiaHR0cHM6Ly9sb2dpbi1zYW5kYm94LmF1dGh4cG8uY29tIiwiYXVkIjpbImh0dHBzOi8vbG9naW4tc2FuZGJveC5hdXRoeHBvLmNvbS9yZXNvdXJjZXMiLCJ4cG8tcmF0ZXMtYXBpIl0sImNsaWVudF9pZCI6Inhwby1rcmFmdC1oZWluei1pbnRlZ3JhdGlvbiIsInNjb3BlIjpbInhwby1yYXRlcy1hcGkiXX0.X8becPIw-gJqMDZlMy3XqDIDe-GiUNznnZQ2j9nd4PKxXkzCBOIDYlvfFrlg29T1PSw8_mfV2V2f0sTmvyBVN3Z4GKjmQb98Wm8P0KaQnJsNEL1uQeR5kQSKuVvgyJCKMCh6aSfcRmrzjiEtcKkClVWaiAyjUsN_2d040rrmuhimvnD5kCzwUoYbUf1Ik9NA-o0_qt2-vRbPFTvaf7c_cqX8jZ7JJNjiLW59To0SHButaKFQSdbxYpFS87n9walEzjit5UGZYPhxbNk0K0kakc_59jf-pFm1783MAm2NX5mFOyi3jtFl9OQAM_clWx6bdiXfWHaJmEeUDAG51KX9jw`\")\n  .addHeader(\"content-type\", \"application/json\")\n  .addHeader(\"accept\", \"application/json\")\n  .addHeader(\"cache-control\", \"no-cache\")\n  .build();\n\nResponse response = client.newCall(request).execute();"
+          },
+          {
+            "lang": "NodeJS",
+            "source": "var unirest = require(\"unirest\");\n\nvar req = unirest(\"POST\", \"https://api-np-connect.xpo.com//OrderService/rest/V1/CreateOrder\");\n\nreq.headers({\n  \"cache-control\": \"no-cache\",\n  \"accept\": \"application/json\",\n  \"content-type\": \"application/json\",\n  \"xpoauthorization\": \"bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkU1OEQ3N0M3MEE2MkRCMUQwMDYwODRCNUNCREI0QkVBMUJGRjhGM0YiLCJ0eXAiOiJKV1QiLCJ4NXQiOiI1WTEzeHdwaTJ4MEFZSVMxeTl0TDZodl9qejgifQ.eyJuYmYiOjE1ODgwMDI1ODAsImV4cCI6MTU4ODAwOTc4MCwiaXNzIjoiaHR0cHM6Ly9sb2dpbi1zYW5kYm94LmF1dGh4cG8uY29tIiwiYXVkIjpbImh0dHBzOi8vbG9naW4tc2FuZGJveC5hdXRoeHBvLmNvbS9yZXNvdXJjZXMiLCJ4cG8tcmF0ZXMtYXBpIl0sImNsaWVudF9pZCI6Inhwby1rcmFmdC1oZWluei1pbnRlZ3JhdGlvbiIsInNjb3BlIjpbInhwby1yYXRlcy1hcGkiXX0.X8becPIw-gJqMDZlMy3XqDIDe-GiUNznnZQ2j9nd4PKxXkzCBOIDYlvfFrlg29T1PSw8_mfV2V2f0sTmvyBVN3Z4GKjmQb98Wm8P0KaQnJsNEL1uQeR5kQSKuVvgyJCKMCh6aSfcRmrzjiEtcKkClVWaiAyjUsN_2d040rrmuhimvnD5kCzwUoYbUf1Ik9NA-o0_qt2-vRbPFTvaf7c_cqX8jZ7JJNjiLW59To0SHButaKFQSdbxYpFS87n9walEzjit5UGZYPhxbNk0K0kakc_59jf-pFm1783MAm2NX5mFOyi3jtFl9OQAM_clWx6bdiXfWHaJmEeUDAG51KX9jw`\",\n  \"x-api-key\": \"40ec79b5-c174-4d5b-9a62-ccce41563ed5\"\n});\n\nreq.type(\"json\");\nreq.send({\n  \"OrderDate\": \"2020-02-13T12:08:09.31\",\n  \"AccountId\": 223,\n  \"ContractId\": \"119\",\n  \"OrderReferenceNumbers\": [\n    {\n      \"Code\": \"CUSTOM_CODE\",\n      \"Type\": \"CLIENT_REFERENCE\",\n      \"Value\": \"8525 - GRANDE PRAIRIE PRO SOLUTIONS\"\n    }\n  ],\n  \"OrderNotes\": [\n    {\n      \"Type\": \"Reason\",\n      \"Value\": \"BRNCH FLT/MAX CAPACTY\"\n    }\n  ],\n  \"OrderContactInformations\": [\n    {\n      \"firstName\": \"TestData\",\n      \"lastName\": \"Lname\",\n      \"email\": \"devcustomer@gmail.com\",\n      \"PhoneNumbers\": [\n        {\n          \"Type\": \"Mobile\",\n          \"Number\": \"6606546565\"\n        }\n      ],\n      \"Title\": \"Mr\",\n      \"isPrimary\": false\n    }\n  ],\n  \"OrderServices\": [\n    {\n      \"Code\": \"12151\",\n      \"Name\": \"Room of Choice Delivery\",\n      \"Description\": \"Base delivery charge for IKEA.\",\n      \"Quantity\": 1,\n      \"UnitofMeasure\": \"Items Hauled Away\"\n    }\n  ],\n  \"OrderDocuments\": [\n    {\n      \"Type\": \"30\",\n      \"Name\": \"28-FEB-2019.xlsx\",\n      \"Key\": \"0000040VD7CES000000000\"\n    }\n  ],\n  \"CrossSellOrderNumber\": \"\",\n  \"SalesReps\": [\n    {\n      \"firstName\": \"TestData\",\n      \"lastName\": \"Lname\",\n      \"email\": \"devcustomer@gmail.com\",\n      \"PhoneNumbers\": [\n        {\n          \"Type\": \"Mobile\",\n          \"Number\": \"6606546565\"\n        }\n      ],\n      \"Title\": \"\",\n      \"isPrimary\": false\n    }\n  ],\n  \"Stops\": [\n    {\n      \"LocationId\": \"MENLO/A017.100014\",\n      \"LocationName\": \"9712 - BELLEVUE WA\",\n      \"LocationType\": \"Warehouse\",\n      \"AddressLine1\": \"ADDRESS2\",\n      \"AddressLine2\": \"\",\n      \"CityName\": \"KENMORE\",\n      \"CountryCode\": \"USA\",\n      \"GeoCodes\": {\n        \"Longitude\": -80.813,\n        \"Latitude\": 35.0533,\n        \"S2CellId\": null\n      },\n      \"ScheduledTimeFrom\": \"2020-02-20T08:00:00\",\n      \"ScheduledTimeTo\": null,\n      \"IsAppointmentRequired\": false,\n      \"IsAppointmentConfirmed\": false,\n      \"StateCode\": \"WA\",\n      \"Type\": \"Pickup\",\n      \"ZipCode\": \"98028\",\n      \"Region\": null,\n      \"SpecialRequirements\": [\n        {\n          \"Type\": \"LIFTGATE\",\n          \"Value\": \"1\"\n        }\n      ],\n      \"StopReferenceNumbers\": [\n        {\n          \"Code\": \"CUSTOM_CODE\",\n          \"Type\": \"CLIENT_REFERENCE\",\n          \"Value\": \"8525 - GRANDE PRAIRIE PRO SOLUTIONS\"\n        }\n      ],\n      \"StopNotes\": [\n        {\n          \"Type\": \"Reason\",\n          \"Value\": \"BRNCH FLT/MAX CAPACTY\"\n        }\n      ],\n      \"StopContactInformations\": [\n        {\n          \"firstName\": \"TestData\",\n          \"lastName\": \"Lname\",\n          \"email\": \"devcustomer@gmail.com\",\n          \"PhoneNumbers\": [\n            {\n              \"Type\": \"Mobile\",\n              \"Number\": \"6606546565\"\n            }\n          ],\n          \"Title\": \"\",\n          \"isPrimary\": false\n        }\n      ]\n    }\n  ],\n  \"RequestedDeliveryDate\": \"2020-02-27T15:00:00\",\n  \"TransportationMode\": \"SEA\",\n  \"Items\": [\n    {\n      \"ItemCode\": \"100-1900\",\n      \"ItemNumber\": \"100056006\",\n      \"ItemDescription\": \"CONCRETE BUCKET 1/2 YD\",\n      \"Units\": 1,\n      \"UnitTypeCode\": \"EACH\",\n      \"PackageUnits\": 2,\n      \"PackageTypeCode\": \"BAG\",\n      \"Weight\": 330,\n      \"WeightUomCode\": \"LB\",\n      \"Height\": 99.999,\n      \"HeightUomCode\": \"IN\",\n      \"Length\": 99.999,\n      \"LengthUomCode\": \"IN\",\n      \"Width\": 150,\n      \"WidthUomCode\": \"IN\",\n      \"DeclaredValue\": 2285.89,\n      \"DeclaredValueCurrencyCode\": \"USD\",\n      \"Volume\": 868.0386,\n      \"VolumeUomCode\": \"CUFT\",\n      \"ItemPrice\": 20.5,\n      \"ItemPriceCurrencyCode\": \"USD\",\n      \"IsHazmat\": false,\n      \"IsTemperatureControlled\": false,\n      \"TemperatureHigh\": null,\n      \"TemperatureLow\": null,\n      \"TemperatureHighUOM\": null,\n      \"TemperatureLowUOM\": null,\n      \"HazardousItemInfo\": {\n        \"UNNumber\": 0,\n        \"PackingGroup\": 0,\n        \"ReceptacleSize\": 0,\n        \"HazardousClass\": null,\n        \"NumberofReceptacles\": 0,\n        \"UnitofMeasure\": null,\n        \"ContainerType\": null,\n        \"HazardousDescription\": null,\n        \"HazardousPhoneNumber\": null,\n        \"ShippingName\": null\n      },\n      \"HTSCode\": null,\n      \"SKU\": \"Sku00001\",\n      \"PurchaseOrderNumber\": null,\n      \"IsOversized\": null,\n      \"IsStackable\": null,\n      \"ItemReferenceNumbers\": [\n        {\n          \"Code\": \"CUSTOM_CODE\",\n          \"Type\": \"CLIENT_REFERENCE\",\n          \"Value\": \"8525 - GRANDE PRAIRIE PRO SOLUTIONS\"\n        }\n      ],\n      \"ItemNotes\": [\n        {\n          \"Type\": \"Reason\",\n          \"Value\": \"BRNCH FLT/MAX CAPACTY\"\n        }\n      ],\n      \"ItemServices\": [\n        {\n          \"Code\": \"12151\",\n          \"Name\": \"Room of Choice Delivery\",\n          \"Description\": \"Base delivery charge for IKEA.\",\n          \"Quantity\": 1,\n          \"UnitofMeasure\": \"Items Hauled Away\"\n        }\n      ]\n    }\n  ],\n  \"IsPartOfConsolidatedShipment\": false,\n  \"OrdersOnConsolidatedShipment\": 1,\n  \"IsExpedited\": false,\n  \"IsXpoManaged\": true,\n  \"PaymentCode\": \"PPD\",\n  \"EquipmentTypeCode\": \"CS\",\n  \"EquipmentCategoryCode\": \"VN\",\n  \"QuoteId\": \"121234\",\n  \"InvoiceDate\": \"2020-02-13T12:08:09.314Z\",\n  \"InvoiceNumber\": \"HBTestFeb132018\"\n});\n\nreq.end(function (res) {\n  if (res.error) throw new Error(res.error);\n\n  console.log(res.body);\n});\n"
+          },
+          {
+            "lang": "C#",
+            "source": "var client = new RestClient(\"https://api-np-connect.xpo.com//OrderService/rest/V1/CreateOrder\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"cache-control\", \"no-cache\");\nrequest.AddHeader(\"accept\", \"application/json\");\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"xpoauthorization\", \"bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkU1OEQ3N0M3MEE2MkRCMUQwMDYwODRCNUNCREI0QkVBMUJGRjhGM0YiLCJ0eXAiOiJKV1QiLCJ4NXQiOiI1WTEzeHdwaTJ4MEFZSVMxeTl0TDZodl9qejgifQ.eyJuYmYiOjE1ODgwMDI1ODAsImV4cCI6MTU4ODAwOTc4MCwiaXNzIjoiaHR0cHM6Ly9sb2dpbi1zYW5kYm94LmF1dGh4cG8uY29tIiwiYXVkIjpbImh0dHBzOi8vbG9naW4tc2FuZGJveC5hdXRoeHBvLmNvbS9yZXNvdXJjZXMiLCJ4cG8tcmF0ZXMtYXBpIl0sImNsaWVudF9pZCI6Inhwby1rcmFmdC1oZWluei1pbnRlZ3JhdGlvbiIsInNjb3BlIjpbInhwby1yYXRlcy1hcGkiXX0.X8becPIw-gJqMDZlMy3XqDIDe-GiUNznnZQ2j9nd4PKxXkzCBOIDYlvfFrlg29T1PSw8_mfV2V2f0sTmvyBVN3Z4GKjmQb98Wm8P0KaQnJsNEL1uQeR5kQSKuVvgyJCKMCh6aSfcRmrzjiEtcKkClVWaiAyjUsN_2d040rrmuhimvnD5kCzwUoYbUf1Ik9NA-o0_qt2-vRbPFTvaf7c_cqX8jZ7JJNjiLW59To0SHButaKFQSdbxYpFS87n9walEzjit5UGZYPhxbNk0K0kakc_59jf-pFm1783MAm2NX5mFOyi3jtFl9OQAM_clWx6bdiXfWHaJmEeUDAG51KX9jw`\");\nrequest.AddHeader(\"x-api-key\", \"40ec79b5-c174-4d5b-9a62-ccce41563ed5\");\nrequest.AddParameter(\"application/json\", \"{\\\n                    \\\"OrderDate\\\": \\\"2020-02-13T12:08:09.31\\\",\\\n                    \\\"AccountId\\\": 223,\\\n                    \\\"ContractId\\\": \\\"119\\\",\\\n                    \\\"OrderReferenceNumbers\\\": [\\\n                      {\\\n                        \\\"Code\\\": \\\"CUSTOM_CODE\\\",\\\n                        \\\"Type\\\": \\\"CLIENT_REFERENCE\\\",\\\n                        \\\"Value\\\": \\\"8525 - GRANDE PRAIRIE PRO SOLUTIONS\\\"\\\n                      }\\\n                    ],\\\n                    \\\"OrderNotes\\\": [\\\n                      {\\\n                        \\\"Type\\\": \\\"Reason\\\",\\\n                        \\\"Value\\\": \\\"BRNCH FLT/MAX CAPACTY\\\"\\\n                      }\\\n                    ],\\\n                    \\\"OrderContactInformations\\\": [\\\n                      {\\\n                        \\\"firstName\\\": \\\"TestData\\\",\\\n                        \\\"lastName\\\": \\\"Lname\\\",\\\n                        \\\"email\\\": \\\"devcustomer@gmail.com\\\",\\\n                        \\\"PhoneNumbers\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Mobile\\\",\\\n                            \\\"Number\\\": \\\"6606546565\\\"\\\n                          }\\\n                        ],\\\n                        \\\"Title\\\": \\\"Mr\\\",\\\n                        \\\"isPrimary\\\": false\\\n                      }\\\n                    ],\\\n                    \\\"OrderServices\\\": [\\\n                      {\\\n                        \\\"Code\\\": \\\"12151\\\",\\\n                        \\\"Name\\\": \\\"Room of Choice Delivery\\\",\\\n                        \\\"Description\\\": \\\"Base delivery charge for IKEA.\\\",\\\n                        \\\"Quantity\\\": 1,\\\n                        \\\"UnitofMeasure\\\": \\\"Items Hauled Away\\\"\\\n                      }\\\n                    ],\\\n                    \\\"OrderDocuments\\\": [\\\n                      {\\\n                        \\\"Type\\\": \\\"30\\\",\\\n                        \\\"Name\\\": \\\"28-FEB-2019.xlsx\\\",\\\n                        \\\"Key\\\": \\\"0000040VD7CES000000000\\\"\\\n                      }\\\n                    ],\\\n                    \\\"CrossSellOrderNumber\\\": \\\"\\\",\\\n                    \\\"SalesReps\\\": [\\\n                      {\\\n                        \\\"firstName\\\": \\\"TestData\\\",\\\n                        \\\"lastName\\\": \\\"Lname\\\",\\\n                        \\\"email\\\": \\\"devcustomer@gmail.com\\\",\\\n                        \\\"PhoneNumbers\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Mobile\\\",\\\n                            \\\"Number\\\": \\\"6606546565\\\"\\\n                          }\\\n                        ],\\\n                        \\\"Title\\\": \\\"\\\",\\\n                        \\\"isPrimary\\\": false\\\n                      }\\\n                    ],\\\n                    \\\"Stops\\\": [\\\n                      {\\\n                        \\\"LocationId\\\": \\\"MENLO/A017.100014\\\",\\\n                        \\\"LocationName\\\": \\\"9712 - BELLEVUE WA\\\",\\\n                        \\\"LocationType\\\": \\\"Warehouse\\\",\\\n                        \\\"AddressLine1\\\": \\\"ADDRESS2\\\",\\\n                        \\\"AddressLine2\\\": \\\"\\\",\\\n                        \\\"CityName\\\": \\\"KENMORE\\\",\\\n                        \\\"CountryCode\\\": \\\"USA\\\",\\\n                        \\\"GeoCodes\\\": {\\\n                          \\\"Longitude\\\": -80.813,\\\n                          \\\"Latitude\\\": 35.0533,\\\n                          \\\"S2CellId\\\": null\\\n                        },\\\n                        \\\"ScheduledTimeFrom\\\": \\\"2020-02-20T08:00:00\\\",\\\n                        \\\"ScheduledTimeTo\\\": null,\\\n                        \\\"IsAppointmentRequired\\\": false,\\\n                        \\\"IsAppointmentConfirmed\\\": false,\\\n                        \\\"StateCode\\\": \\\"WA\\\",\\\n                        \\\"Type\\\": \\\"Pickup\\\",\\\n                        \\\"ZipCode\\\": \\\"98028\\\",\\\n                        \\\"Region\\\": null,\\\n                        \\\"SpecialRequirements\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"LIFTGATE\\\",\\\n                            \\\"Value\\\": \\\"1\\\"\\\n                          }\\\n                        ],\\\n                        \\\"StopReferenceNumbers\\\": [\\\n                          {\\\n                            \\\"Code\\\": \\\"CUSTOM_CODE\\\",\\\n                            \\\"Type\\\": \\\"CLIENT_REFERENCE\\\",\\\n                            \\\"Value\\\": \\\"8525 - GRANDE PRAIRIE PRO SOLUTIONS\\\"\\\n                          }\\\n                        ],\\\n                        \\\"StopNotes\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Reason\\\",\\\n                            \\\"Value\\\": \\\"BRNCH FLT/MAX CAPACTY\\\"\\\n                          }\\\n                        ],\\\n                        \\\"StopContactInformations\\\": [\\\n                          {\\\n                            \\\"firstName\\\": \\\"TestData\\\",\\\n                            \\\"lastName\\\": \\\"Lname\\\",\\\n                            \\\"email\\\": \\\"devcustomer@gmail.com\\\",\\\n                            \\\"PhoneNumbers\\\": [\\\n                              {\\\n                                \\\"Type\\\": \\\"Mobile\\\",\\\n                                \\\"Number\\\": \\\"6606546565\\\"\\\n                              }\\\n                            ],\\\n                            \\\"Title\\\": \\\"\\\",\\\n                            \\\"isPrimary\\\": false\\\n                          }\\\n                        ]\\\n                      }\\\n                    ],\\\n                    \\\"RequestedDeliveryDate\\\": \\\"2020-02-27T15:00:00\\\",\\\n                    \\\"TransportationMode\\\": \\\"SEA\\\",\\\n                    \\\"Items\\\": [\\\n                      {\\\n                        \\\"ItemCode\\\": \\\"100-1900\\\",\\\n                        \\\"ItemNumber\\\": \\\"100056006\\\",\\\n                        \\\"ItemDescription\\\": \\\"CONCRETE BUCKET 1/2 YD\\\",\\\n                        \\\"Units\\\": 1,\\\n                        \\\"UnitTypeCode\\\": \\\"EACH\\\",\\\n\\\n                        \\\"PackageUnits\\\": 2,\\\n                        \\\"PackageTypeCode\\\": \\\"BAG\\\",\\\n                        \\\"Weight\\\": 330,\\\n                        \\\"WeightUomCode\\\": \\\"LB\\\",\\\n                        \\\"Height\\\": 99.999,\\\n                        \\\"HeightUomCode\\\": \\\"IN\\\",\\\n                        \\\"Length\\\": 99.999,\\\n                        \\\"LengthUomCode\\\": \\\"IN\\\",\\\n                        \\\"Width\\\": 150,\\\n                        \\\"WidthUomCode\\\": \\\"IN\\\",\\\n                        \\\"DeclaredValue\\\": 2285.89,\\\n                        \\\"DeclaredValueCurrencyCode\\\": \\\"USD\\\",\\\n                        \\\"Volume\\\": 868.0386,\\\n                        \\\"VolumeUomCode\\\": \\\"CUFT\\\",\\\n                        \\\"ItemPrice\\\": 20.50,\\\n                        \\\"ItemPriceCurrencyCode\\\": \\\"USD\\\",\\\n                        \\\"IsHazmat\\\": false,\\\n                        \\\"IsTemperatureControlled\\\": false,\\\n                        \\\"TemperatureHigh\\\": null,\\\n                        \\\"TemperatureLow\\\": null,\\\n                        \\\"TemperatureHighUOM\\\": null,\\\n                        \\\"TemperatureLowUOM\\\": null,\\\n                        \\\"HazardousItemInfo\\\": {\\\n                          \\\"UNNumber\\\": 0,\\\n                          \\\"PackingGroup\\\": 0,\\\n                          \\\"ReceptacleSize\\\": 0,\\\n                          \\\"HazardousClass\\\": null,\\\n                          \\\"NumberofReceptacles\\\": 0,\\\n                          \\\"UnitofMeasure\\\": null,\\\n                          \\\"ContainerType\\\": null,\\\n                          \\\"HazardousDescription\\\": null,\\\n                          \\\"HazardousPhoneNumber\\\": null,\\\n                          \\\"ShippingName\\\": null\\\n                        },\\\n\\\n                        \\\"HTSCode\\\": null,\\\n                        \\\"SKU\\\": \\\"Sku00001\\\",\\\n                        \\\"PurchaseOrderNumber\\\": null,\\\n                        \\\"IsOversized\\\": null,\\\n                        \\\"IsStackable\\\": null,\\\n                        \\\"ItemReferenceNumbers\\\": [\\\n                          {\\\n                            \\\"Code\\\": \\\"CUSTOM_CODE\\\",\\\n                            \\\"Type\\\": \\\"CLIENT_REFERENCE\\\",\\\n                            \\\"Value\\\": \\\"8525 - GRANDE PRAIRIE PRO SOLUTIONS\\\"\\\n                          }\\\n                        ],\\\n                        \\\"ItemNotes\\\": [\\\n                          {\\\n                            \\\"Type\\\": \\\"Reason\\\",\\\n                            \\\"Value\\\": \\\"BRNCH FLT/MAX CAPACTY\\\"\\\n                          }\\\n                        ],\\\n                        \\\"ItemServices\\\": [\\\n                          {\\\n                            \\\"Code\\\": \\\"12151\\\",\\\n                            \\\"Name\\\": \\\"Room of Choice Delivery\\\",\\\n                            \\\"Description\\\": \\\"Base delivery charge for IKEA.\\\",\\\n                            \\\"Quantity\\\": 1,\\\n                            \\\"UnitofMeasure\\\": \\\"Items Hauled Away\\\"\\\n                          }\\\n                        ]\\\n                      }\\\n                    ],\\\n                    \\\"IsPartOfConsolidatedShipment\\\": false,\\\n                    \\\"OrdersOnConsolidatedShipment\\\": 1,\\\n                    \\\"IsExpedited\\\": false,\\\n                    \\\"IsXpoManaged\\\": true,\\\n                    \\\"PaymentCode\\\": \\\"PPD\\\",\\\n                    \\\"EquipmentTypeCode\\\": \\\"CS\\\",\\\n                    \\\"EquipmentCategoryCode\\\": \\\"VN\\\",\\\n                    \\\"QuoteId\\\": \\\"121234\\\",\\\n                    \\\"InvoiceDate\\\": \\\"2020-02-13T12:08:09.314Z\\\",\\\n                    \\\"InvoiceNumber\\\": \\\"HBTestFeb132018\\\"\\\n                  }\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessCreateOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. Please contact your XPO representive."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "OAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "jwt"
+      }
+    },
+    "schemas": {
+      "QuoteRequest": {
+        "type": "object",
+        "properties": {
+          "EquipmentCategoryCode": {
+            "type": "string",
+            "description": "Type of Equipment used to move your shipment, such as Dry Van, Flatbed etc."
+          },
+          "EquipmentTypeCode": {
+            "type": "string",
+            "description": "Equipment type is the classification under equipment category, such as Dry Van 53, Dry Van 58 etc."
+          },
+          "TransportationMode": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Mode of Transportation, accepted values are string of array as LTL, TL, AIR, SEA, RAI."
+          },
+          "AdditionalServices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Additional services required for this quote."
+          },
+          "Stops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "AddressInformations ": {
+                  "type": "object",
+                  "properties": {
+                    "LocationName": {
+                      "type": "string",
+                      "description": "Name of location."
+                    },
+                    "AddressLine1": {
+                      "type": "string",
+                      "description": "Address line 1 of stop location."
+                    },
+                    "AddressLine2": {
+                      "type": "string",
+                      "description": "Address line 2 of stop location."
+                    },
+                    "CityName": {
+                      "type": "string",
+                      "description": "City name belongs to stop location."
+                    },
+                    "StateCode": {
+                      "type": "string",
+                      "description": "State code of the stop location."
+                    },
+                    "Country": {
+                      "type": "string",
+                      "description": "Country belongs to stop location."
+                    },
+                    "ZipCode": {
+                      "type": "string",
+                      "description": "Postal Code."
+                    }
+                  },
+                  "required": [
+                    "CityName",
+                    "Country",
+                    "StateCode",
+                    "ZipCode"
+                  ]
+                },
+                "Type": {
+                  "type": "string",
+                  "description": "Type of stop.",
+                  "enum": [ "PICKUP", "INTERMEDIATE", "DELIVERY" ]
+                },
+                "ScheduledTimeFrom": {
+                  "type": "string",
+                  "description": "The earliest time by which the service provider can reach the stop."
+                },
+                "ScheduledTimeTo": {
+                  "type": "string",
+                  "description": "The Latest time by which the service provider can reach the stop."
+                },
+                "StopContactInformations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "firstName": {
+                        "type": "string",
+                        "description": "First name of contact person."
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "Last name of contact person."
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "Email for communication."
+                      },
+                      "PhoneNumbers": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "Type": {
+                              "type": "string",
+                              "description": "Phone number types.",
+                              "enum": [ "MOBILE", "WORK", "HOME" ]
+                            },
+                            "Number": {
+                              "type": "string",
+                              "description": "Contact number."
+                            },
+                            "isPrimary": {
+                              "type": "boolean",
+                              "description": "Is contact primary information."
+                            }
+                          }
+                        },
+                        "description": "Primary and alternate numbers for communication."
+                      },
+                      "Title": {
+                        "type": "string",
+                        "description": "Title of contact person."
+                      },
+                      "isPrimary": {
+                        "type": "boolean",
+                        "description": "Is it the primary contact information?."
+                      }
+                    }
+                  },
+                  "description": "Contact Information for each stop."
+                },
+                "SpecialRequirements": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "code": "string",
+                        "description": "Special requirement type."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Special requirements value."
+                      }
+                    }
+                  },
+                  "description": "The array of special requirements for this stop."
+                },
+                "StopReferenceNumbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Code": {
+                        "type": "string",
+                        "description": "Stop Reference code."
+                      },
+                      "Type": {
+                        "type": "string",
+                        "description": "Stope Reference Type."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Actual value of stop reference code."
+                      }
+                    }
+                  },
+                  "description": "The collection of reference numbers associated with this stop, its type is same as order reference object."
+                },
+                "StopNotes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "type": "string",
+                        "description": "Type Of Note."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Value Of Note."
+                      }
+                    }
+                  },
+                  "description": "Notes Associated with Stop, its type is same as order notes object."
+                }
+              }
+            },
+            "description": "Stops information for this Quote including origin and destination.",
+            "required": [
+              "AddressInformations",
+              "Type"
+            ]
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ProductCode": {
+                  "type": "string",
+                  "description": "Item's Product Code."
+                },
+                "ItemNumber": {
+                  "type": "string",
+                  "description": "Item's number."
+                },
+                "ItemDescription": {
+                  "type": "string",
+                  "description": "Item's description."
+                },
+                "Units": {
+                  "type": "integer",
+                  "description": "Number of units."
+                },
+                "UnitTypeCode": {
+                  "type": "string",
+                  "description": "Item's unit type."
+                },
+                "PackageUnits": {
+                  "type": "integer",
+                  "description": "Number of packages."
+                },
+                "PackageTypeCode": {
+                  "type": "string",
+                  "description": "Package type."
+                },
+                "Weight": {
+                  "type": "integer",
+                  "description": "Item's weight."
+                },
+                "WeightUomCode": {
+                  "type": "string",
+                  "description": "Weight- Unit of measure."
+                },
+                "Height": {
+                  "type": "number",
+                  "description": "Item's height."
+                },
+                "HeightUomCode": {
+                  "type": "string",
+                  "description": "Height- Unit of measure."
+                },
+                "Length": {
+                  "type": "number",
+                  "description": "Item's length."
+                },
+                "LengthUomCode": {
+                  "type": "string",
+                  "description": "Length - Unit of measure."
+                },
+                "Width": {
+                  "type": "integer",
+                  "description": "Item's width."
+                },
+                "WidthUomCode": {
+                  "type": "string",
+                  "description": "Width - Unit of measure."
+                },
+                "IsHazmat": {
+                  "type": "boolean",
+                  "description": "Whether item is hazardous or not."
+                },
+                "IsTemperatureControlled": {
+                  "type": "boolean",
+                  "description": "Whether item is temperature controlled or not."
+                },
+                "TemperatureHigh": {
+                  "type": "string",
+                  "description": "Hight temperature."
+                },
+                "TemperatureLow": {
+                  "type": "string",
+                  "description": "Low temperature."
+                },
+                "TemperatureHighUOM": {
+                  "type": "string",
+                  "description": "High temperature Unit of measure."
+                },
+                "TemperatureLowUOM": {
+                  "type": "string",
+                  "description": "Low temperature Unit of measure."
+                },
+                "HazardousItemInfo": {
+                  "type": "object",
+                  "properties": {
+                    "UNNumber": {
+                      "type": "integer",
+                      "description": "Identification number to identify dangerous goods."
+                    },
+                    "PackingGroup": {
+                      "type": "integer",
+                      "description": "Packaging group."
+                    },
+                    "ReceptacleSize": {
+                      "type": "integer",
+                      "description": "Receptacle size."
+                    },
+                    "HazardousClass": {
+                      "type": "string",
+                      "description": "Hazardous class."
+                    },
+                    "NumberofReceptacles": {
+                      "type": "integer",
+                      "description": "Number of receptacles."
+                    },
+                    "UnitofMeasure": {
+                      "type": "string",
+                      "description": "Unit of measure."
+
+                    },
+                    "ContainerType": {
+                      "type": "string",
+                      "description": "Container type."
+                    },
+                    "HazardousDescription": {
+                      "type": "string",
+                      "description": "Hazardous description."
+                    },
+                    "HazardousPhoneNumber": {
+                      "type": "string",
+                      "description": "Phone number."
+                    },
+                    "ShippingName": {
+                      "type": "string",
+                      "description": "Shipping Name."
+                    }
+                  },
+                  "description": "Hazardous information if the item is Hazardous material (IsHazmat = true)"
+                },
+                "HTSCode": {
+                  "type": "string",
+                  "description": "HTS codes are used to classify and define internationally traded goods."
+                },
+                "SKU": {
+                  "type": "string",
+                  "description": "Stock-keeping unit or SKU refers to a specific item stored to a specific location."
+                },
+                "Class": {
+                  "type": "string",
+                  "description": "This code represents product freight class.."
+                },
+                "NmfcCode": {
+                  "type": "string",
+                  "description": "Commodity or type of product is assigned a National Motor Freight Classification"
+                }
+              },
+              "required": [
+                "ProductCode"
+              ]
+            },
+            "description": "All item details of Quote."
+          },
+          "ContactInformations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "description": "First name of contact person."
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "Last name of contact person."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email for communication."
+                },
+                "PhoneNumbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "type": "string",
+                        "description": "Phone number types.",
+                        "enum": [ "MOBILE", "WORK", "HOME" ]
+                      },
+                      "Number": {
+                        "type": "string",
+                        "description": "Contact number."
+                      }
+                    }
+                  },
+                  "description": "Primary and alternate numbers for communication."
+                },
+                "Title": {
+                  "type": "string",
+                  "description": "Title of contact person."
+                },
+                "isPrimary": {
+                  "type": "boolean",
+                  "description": "Is it the primary contact information?."
+                }
+              }
+            },
+            "description": "Contact Information for this Order."
+          },
+          "BillTo": {
+            "type": "object",
+            "properties": {
+              "AddressInformations ": {
+                "type": "object",
+                "properties": {
+                  "LocationName": {
+                    "type": "string",
+                    "description": "Name of BillTo location."
+                  },
+                  "AddressLine1": {
+                    "type": "string",
+                    "description": "Address line 1 of BillTo location."
+                  },
+                  "AddressLine2": {
+                    "type": "string",
+                    "description": "Address line 2 of BillTo location."
+                  },
+                  "CityName": {
+                    "type": "string",
+                    "description": "City name belongs to BillTo location."
+                  },
+                  "StateCode": {
+                    "type": "string",
+                    "description": "State code of the BillTo location."
+                  },
+                  "Country": {
+                    "type": "string",
+                    "description": "Country belongs to BillTo location."
+                  },
+                  "ZipCode": {
+                    "type": "string",
+                    "description": "Postal Code."
+                  }
+                },
+                "description": "BilTo Address Information."
+              },
+              "ContactInformations": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "description": "First name of contact person."
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "description": "Last name of contact person."
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email for communication."
+                  },
+                  "PhoneNumbers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "Type": {
+                          "type": "string",
+                          "description": "Phone number types.",
+                          "enum": [ "MOBILE", "WORK", "HOME" ]
+                        },
+                        "Number": {
+                          "type": "string",
+                          "description": "Contact number."
+                        }
+                      }
+                    },
+                    "description": "Primary and alternate numbers for communication."
+                  },
+                  "Title": {
+                    "type": "string",
+                    "description": "Title of contact person."
+                  },
+                  "isPrimary": {
+                    "type": "boolean",
+                    "description": "Is it the primary contact information?."
+                  }
+                },
+                "description": "BilTo Contact Information."
+              }
+            },
+            "description": "Bill To Address Information and and Contact Information."
+          },
+          "ReferenceNumbers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Code": {
+                  "type": "string",
+                  "description": "Custom reference code."
+                },
+                "Type": {
+                  "type": "string",
+                  "description": "Type values such as CLIENT_REFERENCE , CP, CS etc.",
+                  "enum": [
+                    "CP",
+                    "CS",
+                    "NON_OTM_USER_EMAIL",
+                    "INCO_TERM",
+                    "SHIPPING_SERVICE",
+                    "SHIPPING_SERVICE",
+                    "PUBLIC_CG",
+                    "CG",
+                    "NAMED_LOCATION",
+                    "SHIPPER_PICKUP_NUM",
+                    "CLIENT_REFERENCE",
+                    "NON_MANAGED",
+                    "ZWF_REPORTED",
+                    "ZWF_STD_REASON",
+                    "ZWF_XPD_REASON",
+                    "ZWF_XPD",
+                    "BUS_UNIT",
+                    "PRO",
+                    "SHIPPER_BOL",
+                    "HOUSE_BOL",
+                    "SEAL_NUMBER",
+                    "OVERSIZE"
+                  ]
+                },
+                "Value": {
+                  "type": "string",
+                  "description": "Actual value of reference code."
+                }
+              }
+            },
+            "description": "If customer has more than one reference number e.g. primary order number , secondary order number."
+          },
+          "Notes": {
+            "type": "object",
+            "properties": {
+              "Type": {
+                "type": "string",
+                "description": "Note's type."
+              },
+              "Value": {
+                "type": "string",
+                "description": "Note's value."
+              }
+            },
+            "description": "Notes for this Quote."
+          }
+        },
+        "required": [
+          "TransportationMode",
+          "Stops",
+          "Items"
+        ],
+        "example": {
+          "type": "object",
+          "properties": {
+            "equipmentCategoryCode": {
+              "type": "string"
+            },
+            "equipmentTypeCode": {
+              "type": "string"
+            },
+            "transportationMode": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "additionalServices": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code"
+                  ]
+                }
+              ]
+            },
+            "stops": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "AddressInformations": {
+                      "type": "object",
+                      "properties": {
+                        "locationName": {
+                          "type": "string"
+                        },
+                        "addressLine1": {
+                          "type": "string"
+                        },
+                        "addressLine2": {
+                          "type": "string"
+                        },
+                        "cityName": {
+                          "type": "string"
+                        },
+                        "stateCode": {
+                          "type": "string"
+                        },
+                        "country": {
+                          "type": "string"
+                        },
+                        "zipCode": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "locationName",
+                        "addressLine1",
+                        "addressLine2",
+                        "cityName",
+                        "stateCode",
+                        "country",
+                        "zipCode"
+                      ]
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "scheduledTimeFrom": {
+                      "type": "string"
+                    },
+                    "specialRequirement": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code"
+                      ]
+                    },
+                    "StopContactInformations": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "firstName": {
+                              "type": "string"
+                            },
+                            "lastName": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "PhoneNumbers": {
+                              "type": "array",
+                              "items": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "Type": {
+                                      "type": "string"
+                                    },
+                                    "Number": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "Type",
+                                    "Number"
+                                  ]
+                                }
+                              ]
+                            },
+                            "Title": {
+                              "type": "string"
+                            },
+                            "isPrimary": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "firstName",
+                            "lastName",
+                            "email",
+                            "PhoneNumbers",
+                            "Title",
+                            "isPrimary"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "AddressInformations",
+                    "type",
+                    "scheduledTimeFrom",
+                    "specialRequirement",
+                    "StopContactInformations"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "AddressInformations": {
+                      "type": "object",
+                      "properties": {
+                        "locationName": {
+                          "type": "string"
+                        },
+                        "addressLine1": {
+                          "type": "string"
+                        },
+                        "addressLine2": {
+                          "type": "string"
+                        },
+                        "cityName": {
+                          "type": "string"
+                        },
+                        "stateCode": {
+                          "type": "string"
+                        },
+                        "country": {
+                          "type": "string"
+                        },
+                        "zipCode": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "locationName",
+                        "addressLine1",
+                        "addressLine2",
+                        "cityName",
+                        "stateCode",
+                        "country",
+                        "zipCode"
+                      ]
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "specialRequirement": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code"
+                      ]
+                    },
+                    "StopContactInformations": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "firstName": {
+                              "type": "string"
+                            },
+                            "lastName": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "PhoneNumbers": {
+                              "type": "array",
+                              "items": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "Type": {
+                                      "type": "string"
+                                    },
+                                    "Number": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "Type",
+                                    "Number"
+                                  ]
+                                }
+                              ]
+                            },
+                            "Title": {
+                              "type": "string"
+                            },
+                            "isPrimary": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "firstName",
+                            "lastName",
+                            "email",
+                            "PhoneNumbers",
+                            "Title",
+                            "isPrimary"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "AddressInformations",
+                    "type",
+                    "specialRequirement",
+                    "StopContactInformations"
+                  ]
+                }
+              ]
+            },
+            "items": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "productCode": {
+                      "type": "string"
+                    },
+                    "units": {
+                      "type": "integer"
+                    },
+                    "unitTypeCode": {
+                      "type": "string"
+                    },
+                    "packageUnits": {
+                      "type": "integer"
+                    },
+                    "packageTypeCode": {
+                      "type": "string"
+                    },
+                    "weight": {
+                      "type": "integer"
+                    },
+                    "weightUomCode": {
+                      "type": "string"
+                    },
+                    "height": {
+                      "type": "integer"
+                    },
+                    "heightUomCode": {
+                      "type": "string"
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "lengthUomCode": {
+                      "type": "string"
+                    },
+                    "width": {
+                      "type": "integer"
+                    },
+                    "WidthUomCode": {
+                      "type": "string"
+                    },
+                    "isHazmat": {
+                      "type": "boolean"
+                    },
+                    "isTemperatureControlled": {
+                      "type": "boolean"
+                    },
+                    "temperatureHigh": {
+                      "type": "null"
+                    },
+                    "temperatureLow": {
+                      "type": "null"
+                    },
+                    "temperatureHighUOM": {
+                      "type": "null"
+                    },
+                    "temperatureLowUOM": {
+                      "type": "null"
+                    },
+                    "hazardousItemInfo": {
+                      "type": "object",
+                      "properties": {
+                        "unnumber": {
+                          "type": "integer"
+                        },
+                        "packingGroup": {
+                          "type": "integer"
+                        },
+                        "receptacleSize": {
+                          "type": "integer"
+                        },
+                        "hazardousClass": {
+                          "type": "null"
+                        },
+                        "numberofReceptacles": {
+                          "type": "integer"
+                        },
+                        "unitofMeasure": {
+                          "type": "null"
+                        },
+                        "containerType": {
+                          "type": "null"
+                        },
+                        "hazardousDescription": {
+                          "type": "null"
+                        },
+                        "hazardousPhoneNumber": {
+                          "type": "null"
+                        },
+                        "shippingName": {
+                          "type": "null"
+                        }
+                      },
+                      "required": [
+                        "unnumber",
+                        "packingGroup",
+                        "receptacleSize",
+                        "hazardousClass",
+                        "numberofReceptacles",
+                        "unitofMeasure",
+                        "containerType",
+                        "hazardousDescription",
+                        "hazardousPhoneNumber",
+                        "shippingName"
+                      ]
+                    },
+                    "sKu": {
+                      "type": "string"
+                    },
+                    "nmfcCode": {
+                      "type": "string"
+                    },
+                    "class": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "productCode",
+                    "units",
+                    "unitTypeCode",
+                    "packageUnits",
+                    "packageTypeCode",
+                    "weight",
+                    "weightUomCode",
+                    "height",
+                    "heightUomCode",
+                    "length",
+                    "lengthUomCode",
+                    "width",
+                    "WidthUomCode",
+                    "isHazmat",
+                    "isTemperatureControlled",
+                    "temperatureHigh",
+                    "temperatureLow",
+                    "temperatureHighUOM",
+                    "temperatureLowUOM",
+                    "hazardousItemInfo",
+                    "sKu",
+                    "nmfcCode",
+                    "class"
+                  ]
+                }
+              ]
+            },
+            "contactInformations": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "firstName": {
+                      "type": "string"
+                    },
+                    "lastName": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "PhoneNumbers": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "Type": {
+                              "type": "string"
+                            },
+                            "Number": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "Type",
+                            "Number"
+                          ]
+                        }
+                      ]
+                    },
+                    "Title": {
+                      "type": "string"
+                    },
+                    "isPrimary": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "firstName",
+                    "lastName",
+                    "email",
+                    "PhoneNumbers",
+                    "Title",
+                    "isPrimary"
+                  ]
+                }
+              ]
+            },
+            "applicationSource": {
+              "type": "string"
+            },
+            "partnerOrderCoder": {
+              "type": "string"
+            },
+            "partnerIdentifierCode": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "equipmentCategoryCode",
+            "equipmentTypeCode",
+            "transportationMode",
+            "additionalServices",
+            "stops",
+            "items",
+            "contactInformations",
+            "applicationSource",
+            "partnerOrderCoder",
+            "partnerIdentifierCode"
+          ]
+        }
+      },
+      "QuoteResponse": {
+        "type": "object",
+        "properties": {
+          "MasterQuoteId": {
+            "type": "integer",
+            "description": "Unique Identifier for tracking Quote Request."
+          },
+          "StatusCode": {
+            "type": "integer",
+            "description": "Success http response code 200.",
+            "example": "200"
+          },
+          "Message": {
+            "type": "string",
+            "description": "Success message for generated Quote.",
+            "example": "Quote creation completed."
+          },
+          "PriceSearchResponse": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Mode": {
+                  "type": "string",
+                  "description": "This  is to identify, specific price search response is for which transportation mode."
+                },
+                "LowestPrice": {
+                  "type": "number",
+                  "description": "The lowest price amount of quote for this specific mode."
+                },
+                "QuoteDetails": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "QuoteId": {
+                        "type": "integer",
+                        "description": "Unique Identifier for Quote."
+                      },
+                      "CarrierCode": {
+                        "type": "string",
+                        "description": "Code used to uniquely identify the carrier."
+                      },
+                      "CarrierName": {
+                        "type": "string",
+                        "description": "Name of the carrier."
+                      },
+                      "ServiceLevel": {
+                        "type": "string",
+                        "description": "Service level.",
+                        "enum": [ "Single", "Team", "LTL" ]
+                      },
+                      "MovementType": {
+                        "type": "string",
+                        "description": "Type of Movement."
+                      },
+                      "EstimatedTransitTime": {
+                        "type": "integer",
+                        "description": "Estimated transit time in days."
+                      },
+                      "Accessorials": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "Code": {
+                              "type": "string",
+                              "description": "Accessorial Code."
+                            },
+                            "Name": {
+                              "type": "string",
+                              "description": "Accessorial Name."
+                            },
+                            "Cost": {
+                              "type": "number",
+                              "description": "Accessorial Cost ."
+                            }
+                          }
+                        },
+                        "description": "This is an array which contains the additional services and charges."
+                      },
+                      "RateList": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "IsOptional": {
+                              "type": "boolean",
+                              "description": "Is optional."
+                            },
+                            "CurrencyCode": {
+                              "type": "string",
+                              "description": "Currency Code for this Rate."
+                            },
+                            "Code": {
+                              "type": "string",
+                              "description": "Rate Code."
+                            },
+                            "TypeCode": {
+                              "type": "string",
+                              "description": "Type Code for this Rate."
+                            },
+                            "Cost": {
+                              "type": "string",
+                              "description": "Cost."
+                            }
+                          }
+                        },
+                        "description": "This is an array which contains the rate split-up."
+                      },
+                      "Legs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "Stops": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "AddressInformations": {
+                                    "type": "object",
+                                    "properties": {
+                                      "LocationId": {
+                                        "type": "string",
+                                        "description": "Id of the location."
+                                      },
+                                      "LocationName": {
+                                        "type": "string",
+                                        "description": "Name of the location."
+                                      },
+                                      "Type": {
+                                        "type": "string",
+                                        "description": "Type of the location."
+                                      },
+                                      "ZipCode": {
+                                        "type": "string",
+                                        "description": "Zipcode of the location."
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "description": "This holds the array of stops for this leg including Origin and Destination"
+                            }
+                          }
+                        },
+                        "description": "This is an array which holds the specific route information of this applicable quote price. "
+                      },
+                      "AccessorialsTotalCost": {
+                        "type": "number",
+                        "description": "Accessorial's Total Cost."
+                      },
+                      "SubTotal": {
+                        "type": "number",
+                        "description": "Sub Total."
+                      },
+                      "TotalCost": {
+                        "type": "number",
+                        "description": "Total Cost."
+                      },
+                      "IsNMFCCarrier": {
+                        "type": "boolean",
+                        "description": "Boolean flag to represent its an NMFC carrier."
+                      },
+                      "IsContractRate": {
+                        "type": "boolean",
+                        "description": "Boolean flag to represent this quote is contract rate."
+                      },
+                      "CurrencyCode": {
+                        "type": "string",
+                        "description": "Currency Code."
+                      },
+                      "ExpiresOn": {
+                        "type": "string",
+                        "description": "Quote expiry date."
+                      },
+                      "CreatedOn": {
+                        "type": "string",
+                        "description": "Quote created date."
+                      }
+                    }
+                  },
+                  "description": "This is an array of object which holds the list of quote details."
+                },
+                "LowestQuotePrice": {
+                  "type": "object",
+                  "properties": {
+                    "QuoteId": {
+                      "type": "integer",
+                      "description": "Unique Identifier for Quote."
+                    },
+                    "CarrierCode": {
+                      "type": "string",
+                      "description": "Carrier Code."
+                    },
+                    "CarrierName": {
+                      "type": "string",
+                      "description": "Carrier Name."
+                    },
+                    "EstimatedTransitTime": {
+                      "type": "integer",
+                      "description": "Estimated transit time in days."
+                    },
+                    "LineHaul": {
+                      "type": "number",
+                      "description": "Line Haul."
+                    },
+                    "FSC": {
+                      "type": "number",
+                      "description": "FSC."
+                    },
+                    "Accessorials": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Code": {
+                            "type": "string",
+                            "description": "Accessorial Code."
+                          },
+                          "Name": {
+                            "type": "string",
+                            "description": "Accessorial Name."
+                          },
+                          "Cost": {
+                            "type": "number",
+                            "description": "Accessorial Cost ."
+                          }
+                        }
+                      },
+                      "description": "This is an array which contains the additional services and charges."
+                    },
+                    "AccessorialsTotalCost": {
+                      "type": "number",
+                      "description": "Accessorial's Total Cost."
+                    },
+                    "SubTotal": {
+                      "type": "number",
+                      "description": "Sub Total."
+                    },
+                    "TotalCost": {
+                      "type": "number",
+                      "description": "Total Cost."
+                    },
+                    "IsNMFCCarrier": {
+                      "type": "boolean",
+                      "description": "Boolean flag to represent its an NMFC carrier."
+                    }
+                  }
+                },
+                "LowestGuaranteedQuotePrice": {
+                  "type": "object",
+                  "properties": {
+                    "QuoteId": {
+                      "type": "integer",
+                      "description": "Unique Identifier for Quote."
+                    },
+                    "CarrierCode": {
+                      "type": "string",
+                      "description": "Carrier Code."
+                    },
+                    "CarrierName": {
+                      "type": "string",
+                      "description": "Carrier Name."
+                    },
+                    "EstimatedTransitTime": {
+                      "type": "integer",
+                      "description": "Estimated transit time in days."
+                    },
+                    "LineHaul": {
+                      "type": "number",
+                      "description": "Line Haul."
+                    },
+                    "FSC": {
+                      "type": "number",
+                      "description": "FSC."
+                    },
+                    "Accessorials": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Code": {
+                            "type": "string",
+                            "description": "Accessorial Code."
+                          },
+                          "Name": {
+                            "type": "string",
+                            "description": "Accessorial Name."
+                          },
+                          "Cost": {
+                            "type": "number",
+                            "description": "Accessorial Cost ."
+                          }
+                        }
+                      },
+                      "description": "This is an array which contains the additional services and charges."
+                    },
+                    "AccessorialsTotalCost": {
+                      "type": "number",
+                      "description": "Accessorial's Total Cost."
+                    },
+                    "SubTotal": {
+                      "type": "number",
+                      "description": "Sub Total."
+                    },
+                    "TotalCost": {
+                      "type": "number",
+                      "description": "Total Cost."
+                    },
+                    "IsNMFCCarrier": {
+                      "type": "boolean",
+                      "description": "Boolean flag to represent its an NMFC carrier."
+                    }
+                  }
+                },
+                "BestDealQuotePrice": {
+                  "type": "object",
+                  "properties": {
+                    "QuoteId": {
+                      "type": "integer",
+                      "description": "Unique Identifier for Quote."
+                    },
+                    "CarrierCode": {
+                      "type": "string",
+                      "description": "Carrier Code."
+                    },
+                    "CarrierName": {
+                      "type": "string",
+                      "description": "Carrier Name."
+                    },
+                    "EstimatedTransitTime": {
+                      "type": "integer",
+                      "description": "Estimated transit time in days."
+                    },
+                    "LineHaul": {
+                      "type": "number",
+                      "description": "Line Haul."
+                    },
+                    "FSC": {
+                      "type": "number",
+                      "description": "FSC."
+                    },
+                    "Accessorials": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Code": {
+                            "type": "string",
+                            "description": "Accessorial Code."
+                          },
+                          "Name": {
+                            "type": "string",
+                            "description": "Accessorial Name."
+                          },
+                          "Cost": {
+                            "type": "number",
+                            "description": "Accessorial Cost ."
+                          }
+                        }
+                      },
+                      "description": "This is an array which contains the additional services and charges."
+                    },
+                    "AccessorialsTotalCost": {
+                      "type": "number",
+                      "description": "Accessorial's Total Cost."
+                    },
+                    "SubTotal": {
+                      "type": "number",
+                      "description": "Sub Total."
+                    },
+                    "TotalCost": {
+                      "type": "number",
+                      "description": "Total Cost."
+                    },
+                    "IsNMFCCarrier": {
+                      "type": "boolean",
+                      "description": "Boolean flag to represent its an NMFC carrier."
+                    }
+                  }
+                }
+              },
+              "Description": "It includes the list of quotes details for different modes such as LTL, FTL etc."
+            }
+          }
+        },
+        "example": {
+          "masterQuoteId": 81134516,
+          "StatusCode": 200,
+          "Message": "Ouote creation completed.",
+          "priceSearchResponse": [
+            {
+              "mode": "LTL",
+              "lowestPrice": 333.99,
+              "quoteDetails": [
+                {
+                  "quoteId": 1,
+                  "carrierCode": "DAFG",
+                  "carrierName": "Dayton Freight Standard",
+                  "serviceLevel": "LTL",
+                  "movementType": "DIRECT",
+                  "estimatedTransitTime": 1,
+                  "accessorials": [
+                    {
+                      "name": "Other (General) (GOTH)",
+                      "cost": 75.0
+                    },
+                    {
+                      "name": "Hazardous Material (GHAZ)",
+                      "cost": 30.0
+                    },
+                    {
+                      "name": "Appointment Required (CAPPT)",
+                      "cost": 44.0
+                    }
+                  ],
+                  "rateList": [
+                    {
+                      "isOptional": false,
+                      "currencyCode": "USD",
+                      "rateCodeValue": "Line Haul",
+                      "rateTypeCode": "F",
+                      "rate": "100.0"
+                    }
+                  ],
+                  "legs": [
+                    {
+                      "stops": [
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100015",
+                            "LocationName": "98001 - SEATTLE WA",
+                            "Type": "Pickup",
+                            "ZipCode": "98101"
+                          }
+                        },
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100014",
+                            "LocationName": "9712 - BELLEVUE WA",
+                            "Type": "Delivery",
+                            "ZipCode": "98028"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "accessorialsTotalCost": 0.0,
+                  "subTotal": 92.0,
+                  "totalCost": 333.99,
+                  "isNMFCCarrier": false,
+                  "isContractRate": false,
+                  "currencyCode": "USD",
+                  "expiresOn": "2020-04-29T08:39:18.3251325Z",
+                  "createdOn": "2020-04-27T08:39:31.4003798Z"
+                },
+                {
+                  "quoteId": 2,
+                  "carrierCode": "EXLA",
+                  "carrierName": "Estes Express Lines (Guaranteed LTL Standard Transit: 5PM)",
+                  "serviceLevel": "LTL",
+                  "movementType": "DIRECT",
+                  "estimatedTransitTime": 1,
+                  "accessorials": [
+
+                  ],
+                  "rateList": [
+                    {
+                      "isOptional": false,
+                      "currencyCode": "USD",
+                      "rateCodeValue": "Line Haul",
+                      "rateTypeCode": "F",
+                      "rate": "100.0"
+                    }
+                  ],
+                  "legs": [
+                    {
+                      "stops": [
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100015",
+                            "LocationName": "98001 - SEATTLE WA",
+                            "Type": "Pickup",
+                            "ZipCode": "98101"
+                          }
+                        },
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100014",
+                            "LocationName": "9712 - BELLEVUE WA",
+                            "Type": "Delivery",
+                            "ZipCode": "98028"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "accessorialsTotalCost": 0.0,
+                  "subTotal": 124.0,
+                  "totalCost": 191.17,
+                  "isNMFCCarrier": false,
+                  "isContractRate": false,
+                  "currencyCode": "USD",
+                  "expiresOn": "2020-04-29T08:39:18.3251325Z",
+                  "createdOn": "2020-04-27T08:39:31.4003798Z"
+                }
+              ],
+              "lowestQuotePrice": {
+                "quoteId": 0,
+                "carrierCode": "",
+                "carrierName": "NA",
+                "estimatedTransitTime": 0,
+                "lineHaul": 0.0,
+                "fsc": 0.0,
+                "accessorials": [
+
+                ],
+                "accessorialsTotalCost": 0.0,
+                "subTotal": 0.0,
+                "totalCost": 0.0,
+                "isNMFCCarrier": false
+              },
+              "lowestGuaranteedQuotePrice": {
+                "quoteId": 0,
+                "carrierCode": "",
+                "carrierName": "NA",
+                "estimatedTransitTime": 0,
+                "lineHaul": 0.0,
+                "fsc": 0.0,
+                "accessorials": [
+
+                ],
+                "accessorialsTotalCost": 0.0,
+                "subTotal": 0.0,
+                "totalCost": 0.0,
+                "isNMFCCarrier": false
+              },
+              "bestDealQuotePrice": {
+                "quoteId": 0,
+                "carrierCode": "",
+                "carrierName": "NA",
+                "estimatedTransitTime": 0,
+                "lineHaul": 0.0,
+                "fsc": 0.0,
+                "accessorials": [
+
+                ],
+                "accessorialsTotalCost": 0.0,
+                "subTotal": 0.0,
+                "totalCost": 0.0,
+                "isNMFCCarrier": false
+              }
+            },
+            {
+              "Mode": "TL",
+              "lowestPrice": 555.2,
+              "quoteDetails": [
+                {
+                  "quoteId": 1,
+                  "serviceLevel": "Single",
+                  "estimatedTransitTime": 0,
+                  "accessorials": [
+
+                  ],
+                  "rateList": [
+                    {
+                      "isOptional": false,
+                      "currencyCode": "USD",
+                      "rateCodeValue": "Line Haul",
+                      "rateTypeCode": "F",
+                      "rate": "100.0"
+                    }
+                  ],
+                  "legs": [
+                    {
+                      "stops": [
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100015",
+                            "LocationName": "98001 - SEATTLE WA",
+                            "Type": "Pickup",
+                            "ZipCode": "98101"
+                          }
+                        },
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100014",
+                            "LocationName": "9712 - BELLEVUE WA",
+                            "Type": "Delivery",
+                            "ZipCode": "98028"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "accessorialsTotalCost": 0.0,
+                  "subTotal": 0.0,
+                  "totalCost": 555.2,
+                  "isNMFCCarrier": false,
+                  "pickUpDate": "2020-04-28T00:00:00-04:00",
+                  "pickUpDateDisplay": "2020-04-28",
+                  "isContractRate": false,
+                  "currencyCode": "USD",
+                  "expiresOn": "2020-04-29T08:39:18.3251325Z",
+                  "createdOn": "2020-04-27T08:39:31.4003798Z"
+                },
+                {
+                  "quoteId": 2,
+                  "serviceLevel": "Team",
+                  "estimatedTransitTime": 0,
+                  "lineHaul": 0.0,
+                  "fsc": 0.0,
+                  "accessorials": [
+
+                  ],
+                  "legs": [
+                    {
+                      "stops": [
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100015",
+                            "LocationName": "98001 - SEATTLE WA",
+                            "Type": "Pickup",
+                            "ZipCode": "98101"
+                          }
+                        },
+                        {
+                          "AddressInformations": {
+                            "LocationId": "MENLO/A017.100014",
+                            "LocationName": "9712 - BELLEVUE WA",
+                            "Type": "Delivery",
+                            "ZipCode": "98028"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "accessorialsTotalCost": 0.0,
+                  "subTotal": 0.0,
+                  "totalCost": 805.2,
+                  "isNMFCCarrier": false,
+                  "pickUpDate": "2020-04-28T00:00:00-04:00",
+                  "pickUpDateDisplay": "2020-04-28",
+                  "isContractRate": false,
+                  "currencyCode": "USD",
+                  "expiresOn": "2020-04-29T08:39:18.3251325Z",
+                  "createdOn": "2020-04-27T08:39:31.4003798Z"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "CreateOrderRequest": {
+        "type": "object",
+        "properties": {
+          "OrderDate": {
+            "type": "string",
+            "description": "The Order placed date.",
+            "example": "2020-02-13T12:08:09.31"
+          },
+          "AccountId": {
+            "type": "integer",
+            "description": "The identifier used for sub-accounts under a customer.",
+            "example": "223"
+          },
+          "ContractId": {
+            "type": "string",
+            "description": "The identifier for the contract with the customer.",
+            "example": "119"
+          },
+          "OrderReferenceNumbers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Code": {
+                  "type": "string",
+                  "description": "Custom reference code."
+                },
+                "Type": {
+                  "type": "string",
+                  "description": "Type values such as CLIENT_REFERENCE , CP, CS etc.",
+                  "enum": [
+                    "CP",
+                    "CS",
+                    "NON_OTM_USER_EMAIL",
+                    "INCO_TERM",
+                    "SHIPPING_SERVICE",
+                    "SHIPPING_SERVICE",
+                    "PUBLIC_CG",
+                    "CG",
+                    "NAMED_LOCATION",
+                    "SHIPPER_PICKUP_NUM",
+                    "CLIENT_REFERENCE",
+                    "NON_MANAGED",
+                    "ZWF_REPORTED",
+                    "ZWF_STD_REASON",
+                    "ZWF_XPD_REASON",
+                    "ZWF_XPD",
+                    "BUS_UNIT",
+                    "PRO",
+                    "SHIPPER_BOL",
+                    "HOUSE_BOL",
+                    "SEAL_NUMBER",
+                    "OVERSIZE"
+                  ]
+                },
+                "Value": {
+                  "type": "string",
+                  "description": "Actual value of reference code."
+                }
+              }
+            },
+            "description": "If customer has more than one reference number e.g. primary order number , secondary order number."
+          },
+          "OrderNotes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Type": {
+                  "type": "string",
+                  "description": "Note's type.",
+                  "enum": [ "GENERAL", "ORDER_DESCRIPTION" ]
+                },
+                "Value": {
+                  "type": "string",
+                  "description": "Note's value."
+                }
+              }
+            },
+            "description": "Notes for this order as array values."
+          },
+          "OrderContactInformations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "description": "First name of contact person."
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "Last name of contact person."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email for communication."
+                },
+                "PhoneNumbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "type": "string",
+                        "description": "Phone number types.",
+                        "enum": [ "MOBILE", "WORK", "HOME" ]
+                      },
+                      "Number": {
+                        "type": "string",
+                        "description": "Contact number."
+                      }
+                    }
+                  },
+                  "description": "Primary and alternate numbers for communication."
+                },
+                "Title": {
+                  "type": "string",
+                  "description": "Title of contact person."
+                },
+                "isPrimary": {
+                  "type": "boolean",
+                  "description": "Is it the primary contact information?."
+                }
+              }
+            },
+            "description": "Contact Information for this order."
+          },
+          "OrderServices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Code": {
+                  "type": "string",
+                  "description": "Service code."
+                },
+                "Name": {
+                  "type": "string",
+                  "description": "Service name."
+                },
+                "Description": {
+                  "type": "string",
+                  "description": "Service description."
+                },
+                "Quantity": {
+                  "type": "integer",
+                  "description": "Service quantity."
+                },
+                "UnitofMeasure": {
+                  "type": "string",
+                  "description": "Unit of measure."
+                }
+              },
+              "required": [
+                "Code",
+                "Name",
+                "Description",
+                "Quantity",
+                "UnitofMeasure"
+              ]
+            },
+            "description": "Additional service required for this order."
+          },
+          "OrderDocuments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Type": {
+                  "type": "string",
+                  "description": "Document's type code."
+                },
+                "Name": {
+                  "type": "string",
+                  "description": "Document's name."
+                },
+                "Key": {
+                  "type": "string",
+                  "description": "Document's key generated from DMS after uploading the document."
+                }
+              }
+            },
+            "description": "Documents associated with this order."
+          },
+          "CrossSellOrderNumber": {
+            "type": "string",
+            "description": "Related or complementary item order number."
+          },
+          "SalesReps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "description": "First name of sales representative."
+                },
+                "lastName": {
+                  "type": "string",
+                  "description": "Last name of sales representative."
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email of sales representative."
+                },
+                "PhoneNumbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "type": "string",
+                        "description": "Phone number types.",
+                        "enum": [ "MOBILE", "WORK", "HOME" ]
+                      },
+                      "Number": {
+                        "type": "string",
+                        "description": "Contact number."
+                      }
+                    }
+                  },
+                  "description": "Primary and alternate numbers for communication."
+                },
+                "Title": {
+                  "type": "string",
+                  "description": "Title of sales representative."
+                },
+                "isPrimary": {
+                  "type": "boolean",
+                  "description": "Is it primary sales representative?"
+                }
+              }
+            },
+            "description": "This object represents Sale's representative information."
+
+          },
+          "Stops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "LocationId": {
+                  "type": "string",
+                  "description": "Unique id to identify this stop location."
+                },
+                "LocationName": {
+                  "type": "string",
+                  "description": "Name of location."
+                },
+                "LocationType": {
+                  "type": "string",
+                  "description": "Type of location.",
+                  "enum": [
+                    "WAREHOUSE",
+                    "COMMERCIAL",
+                    "RESIDENTIAL",
+                    "GOVERNMENT",
+                    "STORE"
+                  ]
+                },
+                "AddressLine1": {
+                  "type": "string",
+                  "description": "Address line 1 of stop location."
+                },
+                "AddressLine2": {
+                  "type": "string",
+                  "description": "Address line 2 of stop location."
+                },
+                "CityName": {
+                  "type": "string",
+                  "description": "City name belongs to stop location."
+                },
+                "CountryCode": {
+                  "type": "string",
+                  "description": "Country Code belongs to stop location."
+                },
+                "GeoCodes": {
+                  "type": "object",
+                  "properties": {
+                    "Longitude": {
+                      "type": "number",
+                      "description": "Longitude of stop location."
+                    },
+                    "Latitude": {
+                      "type": "number",
+                      "description": "Latitude of stop location."
+                    },
+                    "S2CellId": {
+                      "type": "null",
+                      "description": "The S2CellId of the stop location."
+                    }
+                  },
+                  "description": "GPS information of stop location."
+                },
+                "ScheduledTimeFrom": {
+                  "type": "string",
+                  "description": "The earliest time by which the service provider can reach the stop."
+                },
+                "ScheduledTimeTo": {
+                  "type": "string",
+                  "description": "The Latest time by which the service provider can reach the stop."
+                },
+                "IsAppointmentRequired": {
+                  "type": "boolean",
+                  "description": "Appointment needs to be scheduled or not."
+                },
+                "IsAppointmentConfirmed": {
+                  "type": "boolean",
+                  "description": "Is Appointment confirmed or not?"
+                },
+                "StateCode": {
+                  "type": "string",
+                  "description": "State code of the stop location."
+                },
+                "Type": {
+                  "type": "string",
+                  "description": "Type of stop.",
+                  "enum": [ "PICKUP", "INTERMEDIATE", "DELIVERY" ]
+                },
+                "ZipCode": {
+                  "type": "string",
+                  "description": "Postal Code."
+                },
+                "Region": {
+                  "type": "string",
+                  "description": "Region for the location."
+                },
+                "SpecialRequirements": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "type": "string",
+                        "description": "Special requirement type."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Special requirements value."
+                      }
+                    }
+                  },
+                  "description": "The array of special requirements for this stop."
+                },
+                "StopReferenceNumbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Code": {
+                        "type": "string",
+                        "description": "Stop Reference code."
+                      },
+                      "Type": {
+                        "type": "string",
+                        "description": "Stope Reference Type."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Actual value of stop reference code."
+                      }
+                    }
+                  },
+                  "description": "The collection of reference numbers associated with this stop, its type is same as order reference object."
+                },
+                "StopNotes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "type": "string",
+                        "description": "Type Of Note."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Value Of Note."
+                      }
+                    }
+                  },
+                  "description": "Notes Associated with Stop, its type is same as order notes object."
+                },
+                "StopContactInformations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "firstName": {
+                        "type": "string",
+                        "description": "First name of contact person."
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "Last name of contact person."
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "Email for communication."
+                      },
+                      "PhoneNumbers": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "Type": {
+                              "type": "string",
+                              "description": "Phone number types.",
+                              "enum": [ "MOBILE", "WORK", "HOME" ]
+                            },
+                            "Number": {
+                              "type": "string",
+                              "description": "Contact number."
+                            }
+                          }
+                        },
+                        "description": "Primary and alternate numbers for communication."
+                      },
+                      "Title": {
+                        "type": "string",
+                        "description": "Title of contact person."
+                      },
+                      "isPrimary": {
+                        "type": "boolean",
+                        "description": "Is it the primary contact information?."
+                      }
+                    }
+                  },
+                  "description": "Contact Information for each stop."
+                }
+              },
+              "required": [
+                "LocationId",
+                "LocationName",
+                "AddressLine1",
+                "CityName",
+                "CountryCode",
+                "StateCode",
+                "Type",
+                "ZipCode"
+              ]
+            },
+            "description": "Stops information for this order including origin and destination."
+          },
+          "RequestedDeliveryDate": {
+            "type": "string",
+            "description": "Requested delivery date of order."
+          },
+          "TransportationMode": {
+            "type": "string",
+            "description": "Mode of Transportation.",
+            "enum": [ "AIR", "SEA", "ROA", "RAI", "LTL", "FTL" ]
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ItemCode": {
+                  "type": "string",
+                  "description": "Item's Code."
+                },
+                "ItemNumber": {
+                  "type": "string",
+                  "description": "Item's number."
+                },
+                "ItemDescription": {
+                  "type": "string",
+                  "description": "Item's description."
+                },
+                "Units": {
+                  "type": "integer",
+                  "description": "Number of units."
+                },
+                "UnitTypeCode": {
+                  "type": "string",
+                  "description": "Item's unit type."
+                },
+                "PackageUnits": {
+                  "type": "integer",
+                  "description": "Number of packages."
+                },
+                "PackageTypeCode": {
+                  "type": "string",
+                  "description": "Package type."
+                },
+                "Weight": {
+                  "type": "integer",
+                  "description": "Item's weight."
+                },
+                "WeightUomCode": {
+                  "type": "string",
+                  "description": "Weight- Unit of measure."
+                },
+                "Height": {
+                  "type": "number",
+                  "description": "Item's height."
+                },
+                "HeightUomCode": {
+                  "type": "string",
+                  "description": "Height- Unit of measure."
+                },
+                "Length": {
+                  "type": "number",
+                  "description": "Item's length."
+                },
+                "LengthUomCode": {
+                  "type": "string",
+                  "description": "Length - Unit of measure."
+                },
+                "Width": {
+                  "type": "integer",
+                  "description": "Item's width."
+                },
+                "WidthUomCode": {
+                  "type": "string",
+                  "description": "Width - Unit of measure."
+                },
+                "DeclaredValue": {
+                  "type": "number",
+                  "description": "Item's declared value."
+                },
+                "DeclaredValueCurrencyCode": {
+                  "type": "string",
+                  "description": "Declared value currency Code."
+                },
+                "Volume": {
+                  "type": "number",
+                  "description": "Item's volume."
+                },
+                "VolumeUomCode": {
+                  "type": "string",
+                  "description": "Volume - Unit of measure."
+                },
+                "ItemPrice": {
+                  "type": "number",
+                  "description": "Item's price."
+                },
+                "ItemPriceCurrencyCode": {
+                  "type": "string",
+                  "description": "Price currency code."
+                },
+                "IsHazmat": {
+                  "type": "boolean",
+                  "description": "Whether item is hazardous or not."
+                },
+                "IsTemperatureControlled": {
+                  "type": "boolean",
+                  "description": "Whether item is temperature controlled or not."
+                },
+                "TemperatureHigh": {
+                  "type": "string",
+                  "description": "Hight temperature."
+                },
+                "TemperatureLow": {
+                  "type": "string",
+                  "description": "Low temperature."
+                },
+                "TemperatureHighUOM": {
+                  "type": "string",
+                  "description": "High temperature Unit of measure."
+                },
+                "TemperatureLowUOM": {
+                  "type": "string",
+                  "description": "Low temperature Unit of measure."
+                },
+                "HazardousItemInfo": {
+                  "type": "object",
+                  "properties": {
+                    "UNNumber": {
+                      "type": "integer",
+                      "description": "Identification number to identify dangerous goods."
+                    },
+                    "PackingGroup": {
+                      "type": "integer",
+                      "description": "Packaging group."
+                    },
+                    "ReceptacleSize": {
+                      "type": "integer",
+                      "description": "Receptacle size."
+                    },
+                    "HazardousClass": {
+                      "type": "string",
+                      "description": "Hazardous class."
+                    },
+                    "NumberofReceptacles": {
+                      "type": "integer",
+                      "description": "Number of receptacles."
+                    },
+                    "UnitofMeasure": {
+                      "type": "string",
+                      "description": "Unit of measure."
+
+                    },
+                    "ContainerType": {
+                      "type": "string",
+                      "description": "Container type."
+                    },
+                    "HazardousDescription": {
+                      "type": "string",
+                      "description": "Hazardous description."
+                    },
+                    "HazardousPhoneNumber": {
+                      "type": "string",
+                      "description": "Phone number."
+                    },
+                    "ShippingName": {
+                      "type": "string",
+                      "description": "Shipping Name."
+                    }
+                  },
+                  "description": "Hazardous information if the item is Hazardous material (IsHazmat = true)"
+                },
+                "HTSCode": {
+                  "type": "string",
+                  "description": "HTS codes are used to classify and define internationally traded goods."
+                },
+                "SKU": {
+                  "type": "string",
+                  "description": "Stock-keeping unit or SKU refers to a specific item stored to a specific location."
+                },
+                "PurchaseOrderNumber": {
+                  "type": "string",
+                  "description": "Purchase order number."
+                },
+                "IsOversized": {
+                  "type": "boolean",
+                  "description": "Whether item is oversized or not."
+                },
+                "IsStackable": {
+                  "type": "string",
+                  "description": "Whether item is stackable or not."
+                },
+                "ItemReferenceNumbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Code": {
+                        "type": "string",
+                        "description": "Reference code."
+                      },
+                      "Type": {
+                        "type": "string",
+                        "description": "Reference type."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Reference value."
+                      }
+                    }
+                  },
+                  "description": "Collection of reference numbers associated with this items, its type is same as order reference object."
+                },
+                "ItemNotes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Type": {
+                        "type": "string",
+                        "description": "Note type."
+                      },
+                      "Value": {
+                        "type": "string",
+                        "description": "Note value."
+                      }
+                    }
+                  },
+                  "description": "Notes Associated with Items, its type is same as order notes object."
+                },
+                "NmfcCode": {
+                  "type": "string",
+                  "description": "Commodity or type of product is assigned a National Motor Freight Classification"
+                }
+              },
+              "required": [
+                "ItemCode"
+              ]
+            },
+            "description": "All item details of order."
+          },
+          "IsPartOfConsolidatedShipment": {
+            "type": "boolean",
+            "description": "Whether this order is part of consolidated shipment or not."
+          },
+          "OrdersOnConsolidatedShipment": {
+            "type": "integer",
+            "description": "Consolidated shipment."
+          },
+          "IsExpedited": {
+            "type": "boolean",
+            "description": "Whether this order is an expedited delivery or not."
+          },
+          "IsXpoManaged": {
+            "type": "boolean",
+            "description": "Whether this order is managed by XPO."
+          },
+          "PaymentCode": {
+            "type": "string",
+            "description": "Method of payment.",
+            "enum": [ "COL", "PPD", "THIRDPARTY" ]
+          },
+          "EquipmentTypeCode": {
+            "type": "string",
+            "description": "Equipment type is the classification under equipment category, such as Dry Van 53, Dry Van 58 etc."
+          },
+          "EquipmentCategoryCode": {
+            "type": "string",
+            "description": "This field will represent type of equipment used to move your shipment, such as Dry Van, Flatbed etc."
+          },
+          "QuoteId": {
+            "type": "string",
+            "description": "Quote id against submitted against this order."
+          },
+          "InvoiceDate": {
+            "type": "string",
+            "description": "Order Invoice Date."
+          },
+          "InvoiceNumber": {
+            "type": "string",
+            "description": "Order Invoice numver."
+          }
+        },
+        "required": [
+          "AccountId",
+          "ContractId",
+          "OrderServices",
+          "Stops",
+          "Items"
+        ]
+      },
+      "SuccessCreateOrder": {
+        "type": "object",
+        "properties": {
+          "OrderId": {
+            "type": "string",
+            "description": "The OrderId generated for submitted order.",
+            "example": "81134516"
+          },
+          "statusCode": {
+            "type": "integer",
+            "description": "Success http response code 200.",
+            "example": "200"
+          },
+          "Message": {
+            "type": "string",
+            "description": "Successful message of order creation.",
+            "example": "Order successfully created."
+          }
+        }
+      },
+      "successtoken": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "description": "Returned Bearer token to be used for subsequent API calls.",
+            "example": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkU1OEQ3N0M3MEE2MkRCMUQwMDYwODRCNUNCREI0QkVBMUJGRjhGM0YiLCJ0eXAiOiJKV1QiLCJ4NXQiOiI1WTEzeHdwaTJ4MEFZSVMxeTl0TDZodl9qejgifQ.eyJuYmYiOjE1ODc1NzQxMDYsImV4cCI6MTU4NzU4MTMwNiwiaXNzIjoiaHR0cHM6Ly9sb2dpbi1zYW5kYm94LmF1dGh4cG8uY29tIiwiYXVkIjpbImh0dHBzOi8vbG9naW4tc2FuZGJveC5hdXRoeHBvLmNvbS9yZXNvdXJjZXMiLCJ4cG8tcmF0ZXMtYXBpIl0sImNsaWVudF9pZCI6Inhwby1rcmFmdC1oZWluei1pbnRlZ3JhdGlvbiIsInNjb3BlIjpbInhwby1yYXRlcy1hcGkiXX0.dnoOVJQdZTFTUIY8uWf4izO7gLmY8fIXZ4N7tlWMhxkZdk6uD8VtOoY8BaJodruSpYXD2qDDHBKQe0VN-VGFBOyjx1hBXt7MSNJM_KP9H66m1VVGouuO4NV9knhTogUK_Mmt4wsfUhpFhR6MZDPkDFkLI7RpajcOfqJCQE8w7dq_AWpcD8R1sWozWcuaJHZ9su0d6x_FIwbA58iZXi7Mw1iWBPi1uuemo3iL5sKyng8V5Pp3IPELUgTFxugtcIEkw9uw3NMcXhT6qLUzfjFaXGJMyxHY-P2VaCgrt6FURkltvef9kqd2_5mB-oJNB4CEqIw9QLOHcW62OnIoi_6Tiw"
+          },
+          "expires_in": {
+            "type": "integer",
+            "description": "Amount of time till token is valid. **7200 seconds (2 hours).**",
+            "example": 7200
+          },
+          "token_type": {
+            "type": "string",
+            "description": "Type of token. **Bearer.**",
+            "example": "Bearer"
+          }
+        }
+      },
+      "error400": {
+        "properties": {
+          "statusCode": {
+            "type": "string",
+            "description": "Status Code value.",
+            "example": "400"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error summary.",
+            "example": "400 Bad Request"
+          },
+          "error_description": {
+            "type": "string",
+            "description": "Error details.",
+            "example": "invalid_client"
+          }
+        }
+      },
+      "error403": {
+        "required": [
+          "http_status_code",
+          "message"
+        ],
+        "properties": {
+          "http_status_code": {
+            "type": "integer",
+            "description": "Error code",
+            "example": 403
+          },
+          "message": {
+            "type": "string",
+            "description": "Specifies issue",
+            "example": "API Key is not valid or is expired / revoked."
+          }
+        }
+      },
+      "error404": {
+        "required": [
+          "statusCode",
+          "error",
+          "error_description"
+        ],
+        "properties": {
+          "statusCode": {
+            "type": "string",
+            "description": "Error code",
+            "example": 404
+          },
+          "error": {
+            "type": "string",
+            "description": "Detail about the error.",
+            "example": "Not Found"
+          },
+          "error_description": {
+            "type": "string",
+            "description": "Specifies error.",
+            "example": "Not Found"
+          }
+        }
+      }
+    }
+  }
+}
